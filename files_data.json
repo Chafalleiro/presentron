@@ -1,0 +1,138 @@
+[
+  {
+    "store": "files",
+    "keys": [
+      "name",
+      "icon",
+      "description",
+      "path",
+      "keyFi"
+    ]
+  },
+  {
+    "name": "dsdasdad",
+    "icon": "🎼",
+    "description": "",
+    "path": "",
+    "keyFi": 96
+  },
+  {
+    "name": "ddddddddddd",
+    "icon": "📂",
+    "description": "dddddddddd",
+    "path": "dddddddddddddddd",
+    "keyFi": 97
+  },
+  {
+    "name": "eeee",
+    "icon": "💾",
+    "description": "trweterw",
+    "path": "trewtrewt",
+    "keyFi": 98
+  },
+  {
+    "name": "",
+    "icon": "🔔",
+    "description": "",
+    "path": "",
+    "keyFi": 99
+  },
+  {
+    "name": "",
+    "icon": "🔔",
+    "description": "",
+    "path": "",
+    "keyFi": 100
+  },
+  {
+    "name": "",
+    "icon": "💋",
+    "description": "",
+    "path": "",
+    "keyFi": 101
+  },
+  {
+    "name": "",
+    "icon": "🔔",
+    "description": "",
+    "path": "",
+    "keyFi": 102
+  },
+  {
+    "name": "",
+    "icon": "🔥",
+    "description": "",
+    "path": "",
+    "keyFi": 103
+  },
+  {
+    "name": "",
+    "icon": "🌐",
+    "description": "",
+    "path": "",
+    "keyFi": 104
+  },
+  {
+    "name": "name",
+    "icon": "📺",
+    "description": "desc",
+    "path": "path",
+    "keyFi": 105
+  },
+  {
+    "name": "sdfds",
+    "icon": "💾",
+    "description": "fdsfsdf",
+    "path": "fdsf",
+    "keyFi": 106
+  },
+  {
+    "name": "aa",
+    "icon": "📄",
+    "description": "abc",
+    "path": "ab",
+    "keyFi": 107
+  },
+  {
+    "name": "rrrrr",
+    "icon": "📡",
+    "description": "rrrr",
+    "path": "rrrr",
+    "keyFi": 108
+  },
+  {
+    "name": "uuuuuuuuuuuuuuuuu",
+    "icon": "🔕",
+    "description": "uuuuuuuuuuuu",
+    "path": "uuuuuuuuuuuuuuuuuuuu",
+    "keyFi": 109
+  },
+  {
+    "name": "cccccccccccccccccccc",
+    "icon": "💻",
+    "description": "ccccccccccccccccccc",
+    "path": "cccccccccccc",
+    "keyFi": 110
+  },
+  {
+    "name": "hhhhhhhhhhhhhhhh",
+    "icon": "🖶",
+    "description": "hhhhhhhhhhhh",
+    "path": "hhhhhh",
+    "keyFi": 111
+  },
+  {
+    "name": "mmmmmmmmmmmmm",
+    "icon": "🤖",
+    "description": "mmmmmmmm",
+    "path": "mmmmmmmmmmmm",
+    "keyFi": 112
+  },
+  {
+    "name": "dfsfds",
+    "icon": "📹",
+    "description": "",
+    "path": "",
+    "keyFi": 113
+  }
+]

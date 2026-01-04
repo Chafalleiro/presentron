@@ -1,0 +1,49 @@
+[
+  {
+    "store": "configs",
+    "keys": [
+      "keyCo",
+      "color",
+      "brightness",
+      "contrast",
+      "barrel",
+      "arrsBarrels"
+    ]
+  },
+  {
+    "keyCo": 1,
+    "color": "originalC",
+    "brightness": "1",
+    "contrast": "1",
+    "barrel": true,
+    "arrsBarrels": {
+      "wide": {
+        "scale": "100",
+        "mx": "-0.37",
+        "my": "-1.05",
+        "mw": "1.5",
+        "mh": "2.5",
+        "cw": "640",
+        "ch": "480"
+      },
+      "square": {
+        "scale": 95,
+        "mx": -0.3,
+        "my": -1.11,
+        "mw": 1.65,
+        "mh": 2.9,
+        "cw": 2537,
+        "ch": 3149
+      },
+      "tall": {
+        "scale": "50",
+        "mx": "-0.23",
+        "my": "-0.83",
+        "mw": "1.65",
+        "mh": "2.5",
+        "cw": "803",
+        "ch": "2471"
+      }
+    }
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "store": "files",
+    "keys": [
+      "name",
+      "icon",
+      "description",
+      "path",
+      "keyFi"
+    ]
+  },
+  {
+    "name": "Presentron Quickstart",
+    "icon": "🖵",
+    "description": "Presentron quick start guide.",
+    "path": "quick_slides.json",
+    "keyFi": 1
+  },
+  {
+    "name": "Retromator config",
+    "icon": "💻",
+    "description": "Configuration settings of retromator pages",
+    "path": "config_help.json",
+    "keyFi": 2
+  }
+]

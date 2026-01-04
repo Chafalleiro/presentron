@@ -1,0 +1,589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>Presentron - Main app</title>	
+		<!--  Meta tags -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--  Essential tags -->
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta name='description' content='Presentron. Slideshare with text.'>
+		<meta http-equiv="Content-Language" content="EN">
+		<meta name="keywords" content="Chafalleiro Retromator gadgets presentation"/>
+		<!--  Social tags -->
+		<meta property="og:title" content="Presentron - Main">
+		<meta property="og:image" content="https://frindeslist.x10.mx/img/FindesFavs.jpeg">
+		<meta property="og:url" content="https://frindeslist.x10.mx/list.html">
+		<meta name="twitter:card" content="summary_large_image">
+		<!--  Non-Essential, But Recommended -->
+		<meta property="og:description" content="List of earning online sites.">
+		<meta property="og:creator" content="Chafalleiro.">
+		<meta name="twitter:image:alt" content="Presentron - Main.">
+		<!--  Non-Essential, But Required for Analytics
+		<meta property="fb:app_id" content="your_app_id" /> -->
+		<meta name="twitter:site" content="@chafalladas_com">
+
+		<link rel="stylesheet" href="styles/fonts.css" media="all"/>
+		<link rel="stylesheet" href="styles/crt.css" media="all"/>
+		<link rel="stylesheet" href="styles/menus.css" media="all"/>
+		<link rel="stylesheet" href="styles/slides.css" media="all"/>
+		<link rel="stylesheet" href="styles/tele.css" media="all"/>
+
+</head>
+<body onresize="reposition();">
+<img class="crt-frame" src="img/crt_green_mask.png">
+	<div id="screen">
+		<div id="teleback" style="visibility: hidden; position: absolute; top:0px; left:0px;">
+			<img class="crt-back" src="img/teleback.jpg"/>
+		</div>
+		<div id="content" class="frame" style="height: 800px; filter:url(#contrast) url(#brightness) url(#colorfill);">
+	<!-- MENU  -->
+		<div id="menu">
+			<ul id="contolbtn" class="menubar">
+				<!-- Menu visibility  -->
+				<li class="bgbright" style="display: block; z-index:10;" id="showmenu">
+				<a href="#" id ="expand"
+				   onclick="document.getElementById('ulist').style.display  = 'block';
+							document.getElementById('expand').style.display  = 'none';
+							document.getElementById('shrink').style.display  = 'block';">🗗</a>
+				</li>
+				<li class="bgbright">
+					<a href="#" id ="shrink" 
+				   	onclick="document.getElementById('expand').style.display  = 'block';
+							 document.getElementById('shrink').style.display  = 'none';
+							document.getElementById('ulist').style.display  = 'none';"
+					style="display:none;">🗕</a>
+				</li>
+				<!-- Menu visibility  -->
+				<!-- Information  -->
+				<li class="bgbright centered news">
+					<!-- Testing available emojis for Plex webfont
+					<span class="news">🚀 🔥800p 🔨 🔧 💀 🚧 👀 💋 🔍 🌐 👾 📴 📵 📞 🤖 📜 📋 💻 📃 💾 📺 📡 🖥 🎙 🎧 🎤 🔇 🔈 🔉 🔊 📢 🎥 📹 🎮 🆕 ⏰ 🔔 🔕 ➕ ➖ 🗖 🗕🗔 🗗 🗇 🖵 🖴 🖶 🎜 🎵 🎼  📄 📁 📂 🗐</span>
+					<br>
+					<span>🚀 🔥800p 🗄️ 📢 ☠️ 🚧 👀 💋 🛠️ 🔧 ⚙️ 🔍 🌐 👾 📴 📵 📞 🤖 💻 📃 📜 📋 🖨️ 🖥️ 💾 📺 🕹️ 📡 ☎️ 🖥 🎙 🎧 🎙️ 🎤  🔇🔈🔉 🔊 📽️ 🎞️ 🎥 📹 🎮 🆕 ⏰ 🔔 🔕➕ ➖ 🗖 🗕🗔 🗗 🗇 🖵 🖴 🖶 🎜 🎵 🎼 🗒️ 📄 📁 📂 🗐 🆕</span>
+					-->
+				</li>
+				<!-- Information  -->
+				<li class="alright">
+					<div id="clock" >AAAA/MM/DD 00:00:00</div>
+				</li>					
+
+			</ul>
+			<ul id="ulist" style="display:none;">
+				<!-- HOME  -->
+				<li>
+					
+					<a href="FrindesFavs-Rollercoin.html">&nbsp;&nbsp;&nbsp;&nbsp;Home</a>
+				</li>
+		<!-- TOC  -->
+				<li class="dropdown">
+					<a href="index.html" class="dropbtn">Index</a>
+				<div class="dropdown-content">
+					<a href="list.html" >List of earning sites.</a>
+					<a href="home.html" >Splash page</a>
+				<!--<a href="toc.html" class="ltrough">Guidex Index.</a>   -->
+				</div>
+				</li>
+				<!-- MISC  -->
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropbtn">Demos</a>
+					<div class="dropdown-content">
+						<a href="https://chafalleiro.github.io/retromator/">VIDEOMATOR (pre alfa)</a>
+						<a href="https://chafalleiro.github.io/retromator/slideshare.html">SLIDERTRON</a>
+						<a href="s_presentron.html">>PRESENTRON SETUP</a>
+						<a href="presentron.html">PRESENTRON</a>
+					</div>
+				</li>
+				<!-- NAVIGATION  -->
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropbtn">Data</a>
+					<div class="dropdown-content">
+						<a href='#' onclick='showModal("mediaConf");return false;'>Data files</a>
+					</div>
+				</li>
+
+				<!-- HELP  -->
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropbtn">Help</a>
+					<div class="dropdown-content">
+						<a href="#" onclick="showModal('help');return false;">Help</a>
+						<a href="#" onclick="showModal('about');return false;">About</a>
+						<a href="#" onclick="showModal('credits');return false;">Credits</a>
+					</div>
+				</li>
+				<!-- Controls  -->				
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropbtn">Controls</a>
+					<div class="dropdown-content" id="TitleRef">
+						<a href="#" onclick="showModal('colorControls');return false;">Color controls</a>
+						<a href="#" onclick="showModal('crtControls');return false;">CRT controls</a>
+						<a href="#" onclick="saveConf();return false;">Save configurations</a>
+						<a href="#" onclick="loadConf();return false;">Load configurations</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	<!-- MENU  -->
+	<!-- TITLE  --><br><br>
+		<div class="title"><br id="gameRef"><br>
+			<h2><br>Presentron.</h2><br>
+			<br><span class="news">🚧</span>&nbsp;Show and select slidecarts.&nbsp;<span class="news">🚧</span><br><br>
+		<div id="flashBox" class="alertBox">
+			<span id="flashTxt"></span>
+		</div>
+		</div>
+	<!-- TITLE  -->
+	<!-- CONTENT  -->
+
+		<div id="cartList" style="margin: auto; height:80%;">
+		<table id="cartTable" border="1" class="tableList sortable" style="width: 95%; margin: auto; scroll:auto;">
+			<thead id="cartHead">
+			</thead>
+			<tbody id="cartBody">
+			</tbody>
+			<tfoot id="cartBottom">
+			</tfoot>
+		</table>
+		<br><br><br><br><br>
+		</div>
+	<br><br><br><br><br>
+	<!-- CONTENT  -->
+
+
+		<!-- DATA  -->
+
+		<div id="editWin" class="windows">
+		<p onclick="showModal('editWin');" class="icon_right">❎</p>
+		<div id="editTable"></div>
+		</div>
+
+		<div id="slideList" class="windows">
+		<p onclick="showModal('slideList');mainscreen();"  class="icon_right">❎</p>
+		<br><br>
+		<table id="slideTable" border="1" class="tableList sortable" style="width: 95%; margin: auto; scroll:auto;">
+			<thead id="slideHead">
+			</thead>
+			<tbody id="slideBody">
+			</tbody>
+			<tfoot id="slideBottom">
+			</tfoot>
+		</table>
+		<br><br><br><br><br>
+		</div>
+
+		<div id="importData" class="windows" style="margin-top:10%;z-index:3; background:#669966">
+		<p onclick="showModal('importData');mainscreen();" class="icon_right">❎</p>
+		
+			<table cellspacing="0" cellpadding="4" border="1" width="100%">
+				<tr>
+					<td align="center" class="tdWindow" colspan="3">
+					<h1>IMPORT</h1>
+						Choose how the already existing registers will be treated.<br><br>
+					</td>
+				</tr>
+				<tbody id="importBody">
+				</tbody>
+				<tr>
+					<td align="center" class="tdWindow" colspan="3">
+						<span class="textbutton" onclick="showModal('importData');mainscreen();return false;">
+							<br>[&nbsp;CANCEL&nbsp;]<br>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="mediaConf" class="windows" style="z-index:2;">
+		<p onclick="showModal('mediaConf')"  class="icon_right">❎</p>
+			<table cellspacing="0" cellpadding="4" border="1" width="95%">
+				<tr>
+					<td align="center" class="tdWindow">
+						<span class="textbutton" onclick="exportDt('files');return false;">
+							<br>[&nbsp;Export Carts&nbsp;]<br>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="tdWindow">
+						<span class="textbutton" onclick="importWin(fileStruct);return false;">
+							<br>[&nbsp;Import Carts&nbsp;]<br>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="tdWindow" colspan="2">
+						<span class="textbutton" onclick="showModal('mediaConf');return false;">
+							<br>[&nbsp;OK&nbsp;]<br>
+						</span>
+						<br>
+					</td>
+				</tr>
+				
+			</table>
+		</div>
+
+		<!-- DATA  -->
+
+		<!-- POPUPS  -->
+		<div id="alertW" class="windows">
+		<p onclick="showModal('alertW');"  class="icon_right">❎</p>
+		<table border="1">
+			<tr>
+				<td class="tdWindow"><br>
+					<h1 id="alertText"></h1>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdWindow">
+					<span class="textbutton" onclick="showModal('alertW');return false;">
+						<br>[&nbsp;OK&nbsp;]<br><br>
+					</span>
+				</td>
+			</tr>
+		</table>
+		</div>
+
+		<div id="yesNo" class="windows"  style="z-index:1008; height:80%; background:#55aa55">
+			<table border="1">
+				<tr>
+					<td align="center" class="tdWindow" colspan="2">
+					<h1 id="titQuestion">TITLE</h1>
+						<span id="textQuestion">EXPLANATION.</span>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="tdWindow" colspan="2">
+						<table class="tableMin sortable" align="center" >
+						<tr align="center"><td class="tdWindow">Field</td><td class="tdWindow">STORED</td><td class="tdWindow">IMPORTED</td></tr>
+							<tbody  id="bodyQuestion" align="center">
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="tdWindow" width="50%">
+						<span class="textbutton" onclick="fnOK('OK');mainscreen();return false;">
+							[&nbsp;OK&nbsp;]<br><br><br>
+						</span>
+					</td>
+					<td align="center" class="tdWindow" width="50%">
+						<span class="textbutton" onclick="fnCANCEL('CANCEL');return false;">
+							[&nbsp;CANCEL&nbsp;]<br><br><br>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="help" class="windows">
+		<p onclick="showModal('help')"  class="icon_right">❎</p>
+		<table border="1">
+			<tr>
+				<td class="tdWindow"><br>
+					<h1>HELP</h1>
+					<br>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdWindow">
+					<span class="textbutton" onclick="showModal('help');;return false;">
+						<br>[&nbsp;OK&nbsp;]<br><br>
+					</span>
+				</td>
+			</tr>
+		</table>
+		</div>
+
+		<div id="about" class="windows">
+		<p onclick="showModal('about')"  class="icon_right">❎</p>
+		<table cellspacing="0" cellpadding="4" border="1" width="95%">
+			<tr>
+				<td class="tdWindow"><br>
+					<h1>ABOUT</h1><br>
+					A long ago, an aquitance of mine, Mr. John Titor shared the schematics and code for a "time prospecting device". It is an artifact that can probe different outcomes for a given action. It was the 90s, the most advanced processor that I could reach didn't have the minimum specs to run the program, nor any hardware could transfer the bandwith of the data flow and no memory could store the IA datagrams and nets required. Nowadays we did build a prototipe that could see 10^18 diferent variants of a determined coin flip, more or less 10s in the future and 2 in the past. It took more than a week to do so.<br>
+					But in the last ten years, neural and regular chips ones had advanced a lot, also I depured and debugged the code and blueprints, optimizing the process. I could then limit the number of posibilities and explore a selected route in the garden of forking paths.<br>
+					I configured the machine to show records stored electronically in the alternate realities since reading them was way much simpler than aquiring the state of light particles to produce images and mass variations to produce sounds of the original device. In that way I could access all the data flow of a technologically advanced reality, ignoring the others.
+					<br>When exploring a well documented route Known as Orbis Tertium I found traces of an alternate me that lived there. His story is what you will be told here.<br>
+					So yes, all the events related here are real and happened to me, but unfortunately not the me of the universe in wich you are reading this.
+				</td>
+			</tr>
+			<tr>
+				<td class="tdWindow">
+					<span class="textbutton" onclick="showModal('about');;return false;">
+						<br>[&nbsp;OK&nbsp;]<br>
+					</span>
+					<br>
+			</td>
+			</tr>
+		</table>
+		</div>
+
+		<div id="credits" class="windows">
+		<p onclick="showModal('credits')"  class="icon_right">❎</p>
+			<table cellspacing="0" cellpadding="4" border="1" width="95%">
+				<tr>
+					<td class="tdWindow">
+						<br>
+						<h1>CREDITS</h1>
+						<br>
+						Fonts downloaded from here, <a href="https://int10h.org/oldschool-pc-fonts/fontlist/" target="_blank">Int10h</a>. Int 10h is a BIOS interruption to access the display in 80x computers.<br>
+						Also from <a href="https://int10h.org/" target="_blank">Int10h</a> got a <a href="https://int10h.org/blog/2021/01/simulating-crt-monitors-ffmpeg-pt-1-color/" target="_blank"> script </a> named ffcrt to transform the original videos into CRT looking ones.<br>
+						The effects of this page are inspired and some code borrowed from <a href="https://dev.to/ekeijl/retro-crt-terminal-screen-in-css-js-4afh" target="_blank">Edwin at dev.to</a> and the related ones. The bevel is from
+						<a href="https://scar45.github.io/retro-crt-startpage/index.html" target="_blank">Retro CRT Startpage</a>. <a href="https://github.com/custom-start-page/retro-crt" target="_blank">Here is his git.</a>
+						<br>
+						<a href="http://www.arachnoid.com/arachnophilia" target="_blank">Arachnophilia</a> and <a href="https://notepad-plus-plus.org/" target="_blank">notepad++</a> were used to write the HTML, javascript and CSS of this page.<br>
+						<a href="https://obsproject.com/" target="_blank">OBS Studio</a> to capture the games.<br>
+						<a href="https://shotcut.org/" target="_blank">Shotcut</a> to edit and recompress.<br>
+						<a href="https://ffmpeg.org/" target="_blank">ffmpeg</a> is used by ffcrt, the Int10h script.<br>
+						Screen dirt from the <a href="https://www.nexusmods.com/fallout4/mods/2595/" target="_blank">Inmersive Pip-Boy Cracked Screen</a>.<br>
+						<a href="https://www.irfanview.com/" target="_blank">Irfanview</a> and <a href="https://www.gimp.org/" target="_blank">Gimp</a> used to edit bitmap images.<br>
+						<a href="https://inkscape.org/" target="_blank">Inkscape</a> for vectors.<br>
+						<a href="https://stackoverflow.com/" target="_blank">StackOverflow</a>, <a href="https://www.w3schools.com/" target="_blank">W3Schools</a> and <a href="https://developer.mozilla.org/" target="_blank">Mozilla MDN</a> as sources of information.<br>
+						<a href="https://rollercoin.com/?r=l11dxwud" target="_blank">RollerCoin</a> is a game property of their autors.<br>
+						Licensed under <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT license</a>. Using <a href="http://arachnoid.com/careware/index.html" target="_blank">careware</a> license is welcomed. Sharing is caring.<br>
+						SVG filter for effects: https://gist.github.com/rafszul/a6f28a0e4b912dd7c18b<br>
+						<a href="https://www.flaticon.com/free-icons/phone" title="phone icons">Phone icons created by Iconjam - Flaticon</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdWindow">
+						<span class="textbutton" onclick="showModal('credits');;return false;">
+							<br>[&nbsp;OK&nbsp;]<br><br><br>
+						</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- POPUPS  -->
+		<br><br><br>
+	</div>
+	<div class="scanline"></div>
+	<img class="cristal" id="image" src="img/suciedad.png" style="position: fixed; left:0; top:0"/>
+</div>
+
+<!-- Control dialogs.
+  They are outside the screen otherwise recovering from a bad config could be difficult
+-->
+
+<div id="colorControls" class="windows">
+	<p onclick="showModal('colorControls')"  class="icon_right">❎</p>
+	<table cellspacing="0" cellpadding="4" border="1" width="95%" class="tableList">
+		<tr>
+			<td colspan="3" class="tdtitles tdWindow">
+			Color Controls
+			</td>
+		</tr>
+		<tr>
+			<td class="manos tdWindow"><img src="img/vga.png" width="128" height="128" border="0" onclick ="setColor('colA','svg-root','originalC')" /></td>
+			<td class="manos tdWindow"><img src="img/favicon_blue.png" width="128" height="128" border="0" onclick ="setColor('colA','svg-root','blueC')" /></td>
+			<td class="manos tdWindow"><img src="img/favicon_green.png" width="128" height="128" border="0" onclick ="setColor('colA','svg-root','greenC')" /></td>
+		</tr>
+		<tr>
+			<td class="manos tdWindow cellNorm"><img src="img/favicon_red.png" width="128" height="128" border="0" onclick ="setColor('colA','svg-root','redC')" /></td>
+			<td class="manos tdWindow manos tdWindow cellNorm"><img src="img/favicon_yel.png" width="128" height="128" border="0" onclick ="setColor('colA','svg-root','yellowC')" /></td>
+			<td class="manos tdWindow"><img src="img/favicon_gray.png" width="128" height="128" onclick ="setColor('colA','svg-root','grayC')" /></td>
+		</tr>
+		<tr>
+			<td colspan=3 class="tdWindow">
+				<label for="slider-mx">Contrast</label>:
+					<input class="slider" id="slider-con" type="range" min="0" max="2" value="1" step="0.005" oninput="brcon(this,'con');">
+				<label for="slider-my">Brightness</label>:
+					<input class="slider" id="slider-br" type="range"  min="0" max="2" value="1" step="0.01" oninput="brcon(this,'br')"><br>
+			</td>
+		</tr>	
+		<tr>
+			<td colspan=3 class="tdWindow">
+				<span class="textbutton" onclick="showModal('colorControls');modConfig(true);return false;">
+					<br>[&nbsp;OK&nbsp;]<br><br><br>
+				</span>
+				<span class="textbutton" onclick="showModal('colorControls');modConfig(false);return false;">
+					<br>[&nbsp;Cancel&nbsp;]<br><br><br>
+				</span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div id="crtControls" class="windows tdWindow">
+	<p onclick="showModal('crtControls')"  class="icon_right">❎</p>
+		CRT BARREL ACTIVE <input id="brrlChck" type="checkbox" onchange="barrelCheck('content', this);"><br>
+		<label for="slider-x">Scale</label>:
+	<!-- moveSlider(this, 'scale')  -->
+		<input class="slider" id="slider-x" type="range" min="0" max="5000" value="55" step="5" oninput="moveSlider(this, 'scale');this.nextElementSibling.value = this.value" onmouseover="this.nextElementSibling.value = this.value"><output>55</output>
+		<br>
+		<label for="slider-mx">x Filter</label>:
+		<input class="slider" id="slider-mx" type="range" min="-0.53" max="0.17" value="-0.44" step="0.01" oninput="moveSMT(this, 'x');this.nextElementSibling.value = this.value"><output>-0.44</output>
+		<label for="slider-my">y Filter</label>:
+		<input class="slider" id="slider-my" type="range" min="-1.55" max="1.71" value="-1.01" step="0.01" oninput="moveSMT(this, 'y');this.nextElementSibling.value = this.value"><output>-1.01</output><br>
+		<label for="slider-mw">w Filter</label>:
+		<input class="slider" id="slider-mw" type="range" min="1.45" max="2.1" value="1.6" step="0.05" oninput="moveSMT(this, 'width');this.nextElementSibling.value = this.value"><output>1.6</output>
+		<label for="slider-mh">h Filter</label>:
+		<input class="slider" id="slider-mh" type="range"  min="2.5" max="4.05" value="2.7" step="0.05" oninput="moveSMT(this, 'height');this.nextElementSibling.value = this.value"><output>2.7</output><br>
+		<label for="slider-cw">Lens H</label>:
+		<input class="slider" id="slider-cw" type="range" min="128" max="12000" value="2817" step="1" oninput="resizeLens(this, 'width');this.nextElementSibling.value = this.value"><output>2817</output>
+		<label for="slider-ch">Lens V</label>:
+		<input class="slider" id="slider-ch" type="range"  min="64" max="12000" value="2851" step="1" oninput="resizeLens(this, 'height');this.nextElementSibling.value = this.value"><output>2851</output><br>
+		
+		<span class="textbutton" id="label_ratio">[&nbsp;tall&nbsp;]<br><br></span>
+		<span class="textbutton" onclick="showModal('crtControls');modConfig(true);return false;"><br><br>[&nbsp;OK&nbsp;]<br><br></span>
+		<span class="textbutton" onclick="showModal('crtControls');modConfig(false);return false;"><br><br>[&nbsp;Cancel&nbsp;]<br><br></span>
+</div>
+
+
+<!-- SVG to control barrel and screen color -->
+<div style="display: none; position: absolute; z-index:0;">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg-root" width="381" height="166" z-index="-1">
+	<title id="test-title">filters-dispMap-BE-16</title>
+	<desc id="test-desc">Test which verifies the basic facilities of feDisplacementMap.</desc>
+    <defs>
+		<!-- Here is the barrel magic -->
+		<filter id="SphereMapTest" filterUnits="objectBoundingBox" x="-0.37" y="-1.05" width="1.6" height="3.4" preserveAspectRatio="none">
+			<feImage id="mapa" result="Map" xlink:href="img/sphere.png" type="image/png" />
+			<feDisplacementMap id="despMap" in="SourceGraphic" in2="map" scale="90" xChannelSelector="R" yChannelSelector="G"/>
+		</filter>
+		<!-- Here is the color magic -->
+		<filter id="colorfill" z-index="1">
+			<feColorMatrix id="colorMain" type="matrix" in="SourceGraphic" result="B"
+			values="
+				1	0	0	0	0
+				0	1	0	0	0
+				0	0	1	0	0
+				0	0	0	1	0
+				">
+			<animate id="colA" attributeName="values" begin="0s" dur="3.5s" restart_="always" repeatCount="1" values="
+				1	0	0	0	0
+				0	1	0	0	0
+				0	0	1	0	0
+				0	0	0	1	0;
+				1	0	0	0	0
+				0	1	0	0	0
+				0	0	1	0	0
+				0	0	0	1	0
+
+			" fill="freeze"/>
+			</feColorMatrix>
+			<feMerge>
+				<feMergeNode in="A"/>
+				<feMergeNode in="B"/>
+			</feMerge>
+		</filter>
+		<filter id="secondFill" z-index="0">
+			<feColorMatrix id="colorSec" type="matrix" in="SourceGraphic"
+			values="
+				0	0	0	0	0
+				0	1	0	0	0
+				0	0	0	0	0
+				0	0	0	1	0 
+                 "/>
+		</filter>
+		<filter id="brightness">
+			<feComponentTransfer>
+				<feFuncR id="brR" type="linear" slope="1"/>
+				<feFuncG id="brG" type="linear" slope="1"/>
+				<feFuncB id="brB" type="linear" slope="1"/>
+			</feComponentTransfer>
+		</filter>
+		<filter id="contrast">
+			<feComponentTransfer>
+				<feFuncR id="conR" type="linear" slope="1" intercept="0"/>
+				<feFuncG id="conG" type="linear" slope="1" intercept="0"/>
+				<feFuncB id="conB" type="linear" slope="1" intercept="0"/>
+			</feComponentTransfer>
+		</filter>
+		
+	</defs>
+</svg>
+</div>
+
+<!--  PROJECTOR -->
+
+
+<div id="output" class="slides"></div>
+
+<div id="controls">
+<div id="projector">
+<table>
+<tr>
+<td rowspan="2">
+	<img id="prScreen" src="slides/pantalla.png" style="margin-left: 5vh; margin-right: 1vh; width: 90%; height:90vh;"/>
+<div id="slideActive">
+	<img id="slideDirt" src="slides/pelo.png" border="0" alt="" />
+	<img id="slideDmg" src="slides/Texture15.png" border="0" alt="" />
+</div>
+	
+</td>
+<td>
+<p  id="slideText" class="slideText" style="font-size:1em"></p>
+</td></tr>
+<tr><td style="width: 20%; height:50vh;">
+	<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+	<svg  style="width: 50%; min-width: 50%; height:50vh;" version="1.1" id="mando" xml:space="preserve" width="105.2" height="348.19522" viewBox="0 0 105.2 348.19522" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+	<defs id="defs14" />
+	<image width="104" height="346" preserveAspectRatio="none" xlink:href="/slides/mandoslider.png" id="remote_img" x="1.0055602" y="0" />
+	<g id="remote_shape" style="stroke:#ff0000" transform="translate(0.60000002,1.5952228)">
+		<a id="rw"   onclick="moveOut(this);return false;" xlink:href="#" xlink:title="Next" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0">
+			<rect id="button_down" width="25.249594"   height="25.510921"   x="59.110619"   y="29.486305"   ry="4.0913806"   rx="0" />
+		</a>
+		<a id="a1134" xlink:href="#" onclick="powerOff();mainscreen();" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0" xlink:title="Power off" >
+			<ellipse id="button_off" cx="53.367126" cy="303.03372" rx="13.912097" ry="13.625946" transform="translate(-0.60000002,-1.5952228)" />
+		</a>
+		<a id="ff" xlink:href="#" onclick="moveOut(this);return false;" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0" >		
+			<rect id="button_up" width="25.249594" height="25.510921" x="19.749472" y="29.533428" ry="4.0913806" rx="0" />
+		</a>
+		<a id="a1234" xlink:title="Text --" xlink:href="#" onclick="txtResize('slideText', 'shrink');" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0" >
+			<rect id="focus_down" width="25.249594" height="25.510921" x="58.396255" y="87.402435" ry="4.0913806" rx="0" />
+		</a>
+		<a id="a1133" xlink:title="Text ++" xlink:href="#" onclick="txtResize('slideText', 'grow');" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0" >
+			<rect id="focus_up" width="25.249594" height="25.510921" x="19.344793" y="86.795418" ry="4.0913806" rx="0" />
+		</a>
+	</g>
+	<path id="ffL" style="fill:#ff0000;fill-opacity:0;stroke:#ff0000;stroke-width:0.815421;stroke-linejoin:round;stroke-opacity:0" d="M 48.113891,25.165239 17.714916,24.852496 31.781236,14.952914 Z" />
+	<path id="rwL" style="fill:#ff0000;fill-opacity:0;stroke:#ff0000;stroke-width:0.78775;stroke-linejoin:round;stroke-opacity:0" d="M 56.238607,15.3501 88.242072,15.255166 71.79795,26.167051 Z" />
+	</svg>
+	</td></tr></table>
+	</div>
+</div>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="combini">
+	<defs>
+	<filter id="myFilt">
+	<!-- First make the transparency with the source image and output in A  -->
+		<feComponentTransfer in="SourceGraphic" result="A">
+			<feFuncA id="opFu" type="table" tableValues="0 1">
+				<animate id="opA" attributeName="tableValues" begin="0s" dur="1.5s" restart_="always" repeatCount="1" values="0 0;0 1" fill="freeze"/>
+			</feFuncA>
+		</feComponentTransfer>
+	<!-- We blur the result put in A -->
+		<feGaussianBlur id="blF" in="A" stdDeviation="0" edgeMode = "duplicate">
+			<animate id="blA" attributeName="stdDeviation"
+					begin="0s" dur="1.5s" restart_="always" repeatCount="1"
+				values="15;0" fill="freeze"/>
+		</feGaussianBlur>		
+	</filter>
+	</defs>
+</svg>
+
+<svg height="0" width="0" id="clippingArea">
+	<defs>
+	<clipPath id="svgBigBradius">
+		<rect id="rectA" x="0" y="0" height="400" width="600" rx="30" ry="30">
+			<animate id="xClip" attributeName="x" begin="indefinite" dur="2.35s" restart_="always" repeatCount="1" values="0;400;0" fill="freeze"/>
+			<animate id="wClip" attributeName="width" begin="indefinite" dur="2.35s" restart_="always" repeatCount="1" values="400;0;400" fill="freeze"/>
+		</rect>
+	</clipPath>
+	</defs>
+</svg>
+<!--  PROJECTOR -->
+
+<script src="js/umd.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/colors.js"></script>
+<script src="js/crt.js"></script>
+<script src="js/db_routines.js"></script>
+<script src="js/pr_data.js"></script>
+<script src="js/presentron.js"></script>
+
+
+</body>
+</html>
+	

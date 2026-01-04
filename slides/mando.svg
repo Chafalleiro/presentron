@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" id="mando" xml:space="preserve" width="105.2" height="348.19522" viewBox="0 0 105.2 348.19522" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+<defs id="defs14" />
+		<image width="104" height="346" preserveAspectRatio="none" xlink:href="mandoslider.png" id="remote_img" x="1.0055602" y="0" />
+<g id="remote_shape" style="stroke:#ff0000" transform="translate(0.60000002,1.5952228)">
+				
+				<a id="a392" xlink:href="#" xlink:title="Next" style="fill:#00ff00;fill-opacity:0;stroke:#ff0000;stroke-opacity:0" onclick="alert(&quot;up&quot;)">
+<rect   style="display:inline;fill:#ff0000;fill-opacity:0.0974155;stroke:#ff0000;stroke-width:2.47051;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0"   id="button_down"   width="25.249594"   height="25.510921"   x="59.110619"   y="29.486305"   ry="4.0913806"   rx="0" />
+</a>
+<a id="a1134" xlink:href="#" onclick="powerOff();" style="fill:#00ff00;fill-opacity:0">
+<ellipse   style="opacity:0.964286;fill:#ff0000;fill-opacity:0.0417495;stroke:#ff0000;stroke-width:6.44944;stroke-linejoin:round;stroke-opacity:0"   id="button_off"   cx="53.367126"   cy="303.03372"   rx="13.912097"   ry="13.625946"   transform="translate(-0.60000002,-1.5952228)" />
+</a>
+<rect style="fill:#30ff00;fill-opacity:0.055666;stroke:#ff0000;stroke-width:2.47051;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0" id="button_up" width="25.249594" height="25.510921" x="19.749472" y="29.533428" ry="4.0913806" rx="0" />
+<rect style="fill:#ff0000;fill-opacity:0.0497018;stroke:#ff0000;stroke-width:2.47051;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0" id="focus_down" width="25.249594" height="25.510921" x="58.396255" y="87.402435" ry="4.0913806" rx="0" />
+<rect style="fill:#1aff00;fill-opacity:0.0497018;stroke:#ff0000;stroke-width:2.47051;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0" id="focus_uo" width="25.249594" height="25.510921" x="19.344793" y="86.795418" ry="4.0913806" rx="0" />
+				
+				
+				<rect style="fill:none;stroke:#ff0000;stroke-width:1.2;stroke-linejoin:round;stroke-dasharray:none" id="rect971" width="104" height="346" x="0" y="0" ry="10" />
+			</g>
+			
+	<path style="fill:#ff0000;fill-opacity:0;stroke:#ff0000;stroke-width:0.815421;stroke-linejoin:round;stroke-opacity:0" id="arrow_up" d="M 48.113891,25.165239 17.714916,24.852496 31.781236,14.952914 Z" />
+	<path style="fill:#ff0000;fill-opacity:0;stroke:#ff0000;stroke-width:0.78775;stroke-linejoin:round;stroke-opacity:0" id="arrow_down" d="M 56.238607,15.3501 88.242072,15.255166 71.79795,26.167051 Z" />
+</svg>

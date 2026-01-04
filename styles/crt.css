@@ -1,0 +1,685 @@
+body
+{
+	overflow: hidden;
+	overscroll-behavior: none;
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-weight:normal;
+	font-style:normal;
+	font-size: 1em;
+	color: #009900;
+}
+.frame {
+    min-width: 90%;
+	min-height: 95%;
+	background-color: black;
+	background-image: radial-gradient(200% 250% at center, rgba(0, 50, 50, 0.75), black 100%);
+	background-clip: padding-box;
+	color: #009900;
+	margin: 15;
+	overflow: auto;
+	padding: 2rem;
+	font-family: "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-size: 24px;
+	text-shadow: 0 0 5px #707070;
+	animation: textShadow 0.15s infinite;
+}
+.frame::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: 100% 3px, 2px 100%;
+
+    z-index: 2;
+    pointer-events: none;
+	}
+
+::selection {
+	color: #00f0f0;
+	background: #008008;
+	text-shadow: none;
+}
+pre {
+	margin: 0;
+}
+h1 {
+	font-family: "Web437_EagleSpCGA_Alt2", Inconsolata, monospace;
+	font-weight:normal;
+	font-style:normal;
+}
+p, h2
+{
+	font-family: "Eagle SpCGA Alt3", Inconsolata, monospace;
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+}
+
+.tableList{
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-size: 1em;
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+	border: 3px solid #009900;
+	padding: 1px;
+	width: 95%;
+}
+.tdtitles{
+	font-family: "Eagle SpCGA Alt3", Inconsolata, monospace;
+	text-align: center;
+	font-size: 1.4em;
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+	border: 3px solid #009900;
+}
+.tdcontents{
+	border: 3px solid #009900;
+}
+
+a{
+	color: #00ffc0;
+	text-shadow: 0 0 5px #a0a0a0;
+}
+
+
+@keyframes textShadow {
+	0% {
+		text-shadow: 0.4389924193300864px 0 1px rgba(0, 30, 255, 0.5),
+			-0.4389924193300864px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	5% {
+		text-shadow: 2.7928974010788217px 0 1px rgba(0, 30, 255, 0.5),
+			-2.7928974010788217px 0 2px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	10% {
+		text-shadow: 0.02956275843481219px 0 1px rgba(0, 30, 255, 0.5),
+			-0.02956275843481219px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	15% {
+		text-shadow: 0.40218538552878136px 0 1px rgba(0, 30, 255, 0.5),
+			-0.40218538552878136px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	20% {
+		text-shadow: 3.4794037899852017px 0 1px rgba(0, 30, 255, 0.5),
+			-3.4794037899852017px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	25% {
+		text-shadow: 1.6125630401149584px 0 1px rgba(0, 30, 255, 0.5),
+			-1.6125630401149584px 0 2px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	30% {
+		text-shadow: 0.7015590085143956px 0 1px rgba(0, 30, 255, 0.5),
+			-0.7015590085143956px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	35% {
+		text-shadow: 3.896914047650351px 0 1px rgba(0, 30, 255, 0.5),
+			-3.896914047650351px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	40% {
+		text-shadow: 3.870905614848819px 0 1px rgba(0, 30, 255, 0.5),
+			-3.870905614848819px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	45% {
+		text-shadow: 2.231056963361899px 0 1px rgba(0, 30, 255, 0.5),
+			-2.231056963361899px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	50% {
+		text-shadow: 0.08084290417898504px 0 1px rgba(0, 30, 255, 0.5),
+			-0.08084290417898504px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	55% {
+		text-shadow: 2.3758461067427543px 0 1px rgba(0, 30, 255, 0.5),
+			-2.3758461067427543px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	60% {
+		text-shadow: 2.202193051050636px 0 1px rgba(0, 30, 255, 0.5),
+			-2.202193051050636px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	65% {
+		text-shadow: 2.8638780614874975px 0 1px rgba(0, 30, 255, 0.5),
+			-2.8638780614874975px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	70% {
+		text-shadow: 0.48874025155497314px 0 1px rgba(0, 30, 255, 0.5),
+			-0.48874025155497314px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	75% {
+		text-shadow: 1.8948491305757957px 0 1px rgba(0, 30, 255, 0.5),
+			-1.8948491305757957px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	80% {
+		text-shadow: 0.0833037308038857px 0 1px rgba(0, 30, 255, 0.5),
+			-0.0833037308038857px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	85% {
+		text-shadow: 0.09769827255241735px 0 1px rgba(0, 30, 255, 0.5),
+			-0.09769827255241735px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	90% {
+		text-shadow: 3.443339761481782px 0 1px rgba(0, 30, 255, 0.5),
+			-3.443339761481782px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	95% {
+		text-shadow: 2.1841838852799786px 0 1px rgba(0, 30, 255, 0.5),
+			-2.1841838852799786px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+	100% {
+		text-shadow: 2.6208764473832513px 0 1px rgba(0, 30, 255, 0.5),
+			-2.6208764473832513px 0 1px rgba(255, 0, 80, 0.3),
+			0 0 3px;
+	}
+}
+.scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 8;
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(255, 255, 255, 0.2) 10%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+    opacity: 0.1;
+    position: absolute;
+    bottom: 100%;
+    animation: scanline 10s linear infinite;
+    pointer-events: none;	
+}
+.scanline1 {
+    width: 100%;
+    height: 100px;
+    z-index: 18;
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(255, 255, 255, 0.2) 10%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
+    opacity: 0.1;
+    position: absolute;
+    bottom: 100%;
+    animation: scanline 4s linear infinite;
+    pointer-events: none;	
+}
+@keyframes scanline {
+    0% {
+        bottom: 100%;
+    }
+    80% {
+        bottom: 100%;
+    }
+    100% {
+        bottom: 0%;
+    }
+}
+#screen {
+    position: relative;
+	background: rgba(18, 16, 16, 1);
+	margin: auto;
+    width: 97%;
+    overflow: hidden;
+}
+.cristal {
+    pointer-events: none;	
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	opacity: 60%;
+
+	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 3px, 2px 100%;
+	
+}
+
+.crt-frame {
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.crt-back {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	opacity: 90%
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: auto;
+}
+
+.thumbs {
+  cursor: pointer;
+}
+.thumbs:hover {
+  cursor: pointer;
+  box-shadow: 1px 2px 3px lightgreen;
+}
+.segments
+{
+	font-family: "The Display St";
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+	width: 80px;
+	height: 24px;
+	text-align: center;
+	font-weight:normal;
+	font-style:normal;
+	font-size: 0.73em;
+	color: #00A555;
+	background-color: #101010;
+}
+
+.ltrough
+{
+  text-decoration: line-through;
+}
+.scaleClass
+{
+	 transform: scale(0.5);
+}
+.manos /* The Hands of Fate */
+{
+	 cursor: pointer;
+}
+
+.centerBold
+{
+	font-size:1.2em;
+	font-weight:bold;
+	text-align:center;
+}
+
+.cellNorm {
+	text-align: center;
+	border: 1px solid #009900;
+}
+
+.centered {
+	text-align: center
+}
+
+.title {
+	font-family: "Eagle SpCGA Alt3", Inconsolata, monospace;
+	text-align: center;
+	font-size: 1.4em;
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+}
+
+.alright {
+	display: contents;
+	text-align: right;
+}
+
+.tableNoborder {
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-size: 1em;
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+	border: 0;
+	padding: 1px;
+	width: 95%;
+	overflow: auto;
+}
+
+.cellNormZ {
+	text-align: center;
+	border: 0;
+}
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)
+{
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, tfoot, th, td, tr, .cellNormZ, .cellNorm, .tableList { 
+		display: block; 
+		text-align: initial;
+		overflow: auto;
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr th{ 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; }
+	
+	td .cellNormZ .cellNorm { 
+		/* Behave  like a "row" */
+		border: none;
+		text-align: justify;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	td:before .cellNormZ:before .cellNorm:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+}
+
+th:not([scope=row]) {
+	position: -webkit-sticky;
+	position: sticky;
+	z-index:1;
+	top: 90;
+	background-color: #292929;
+	text-shadow: 0 0 5px #707070;
+	font-weight:normal;
+	font-style:normal;
+	font-size: 1em;
+}
+
+.tableMin {
+	font-size: 1em;
+	text-shadow: 0 0 5px #707070;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.cellTit
+{
+	position: relative;
+	text-align: center;
+	font-size:1.2em;
+	font-weight:bold;
+	z-index:0;
+}
+
+.cellBot
+{
+	position: relative;
+	font-size:1.2em;
+	font-weight:bold;
+	z-index:0;
+}
+
+.cellTit .tooltiptext
+{
+	visibility: hidden;
+	width: 130px;
+	user-select: none;
+	color: black; 
+	background-color: #00AA33;
+  
+	text-align: center;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 8;
+	bottom: 105%;
+	left: 50%;
+	margin-left: -60px;
+	font-size:1em;
+	font-weight:normal;
+	text-shadow: 0 0 5px #707070;
+	animation: textShadow 0.15s infinite;
+
+  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+  opacity: 0;
+  transition: opacity 1s;
+	box-shadow: 25px 35px rgba(0, 25, 0, 0.5);
+}
+.cellTit:hover .tooltiptext
+{
+	visibility: visible;
+	opacity: 1;
+}
+
+table.sortable tbody tfoot tr:nth-child(2n) td {
+	font-weight:normal;
+	font-style:normal;
+	color: #009900;
+	text-shadow: 0 0 5px #707070;
+	background:  #c0ffc0;
+}
+
+table.sortable tbody tfoot tr:nth-child(2n+1) td {
+	color: #001f00;
+	text-shadow: 0 0 5px #707070;
+	background:  #a0ffa0;
+}
+
+.inputMod {
+	font-weight:normal;
+	font-style:normal;
+	font-size: 1.1em;
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	color: #001f00;
+	text-shadow: 0 0 5px #707070;
+	background: rgba(0, 0, 0, 0.1);
+	border: 0px;
+}
+
+.inputTime {
+	font-weight:normal;
+	font-style:normal;
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-size: 1.1em;
+	color: #001f00;
+	text-shadow: 0 0 5px #707070;
+	background: rgba(0, 0, 0, 0.1);
+	border: 0px;
+}
+
+.inputWide {
+	width: 300px;
+	font-weight:normal;
+	font-style:normal;
+	font-family:  "WebPlus_IBM_VGA_8x16", Inconsolata, monospace;
+	font-size: 1em;
+	color: #009900;
+	text-shadow: 0 0 5px #707070;
+
+	color: #001f00;
+	background: rgba(0, 0, 0, 0.1);
+
+	border: 0px;  
+	background-repeat: no-repeat;
+	transition: width 0.4s ease-in-out;
+	overflow: visible;
+}
+
+.inputWide:focus {
+  width: 100%;
+}
+
+.green-input {
+    accent-color: #33FF33;
+	cursor:pointer;
+    height: 20px; /* not needed */
+    width: 20px; /* not needed */
+}
+
+.tooltiped
+{
+		text-align:center;
+		cursor: pointer;
+		position: relative;
+		user-select: none;
+}
+
+.tooltiped .tooltipBookmark
+{
+	visibility: hidden;
+	width: 330px;
+
+	color: black; 
+	background-color: #00AA33;
+  	user-select: none;
+	text-align: center;
+	padding: 5px 0;
+	position: absolute;
+	margin: auto -75%;
+	z-index: 17;
+	bottom: 80%;
+	font-size:1em;
+	font-weight:normal;
+	text-shadow: 0 0 5px #707070;
+	animation: textShadow 0.15s infinite;
+  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+  opacity: 0;
+  transition: opacity 1s;
+	box-shadow: 25px 35px rgba(0, 25, 0, 0.5);
+}
+
+.tooltiped:hover .tooltipBookmark
+{
+	visibility: visible;
+	opacity: 1;
+	z-index: 12;
+	display:block;
+	position: absolute;
+}
+
+.spanT
+{
+	cursor: pointer;
+}
+
+.spanT .tooltipSp
+{
+	visibility: hidden;
+	width: 250px;
+	color: black; 
+	background-color: #00AA33;
+	text-align: center;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 9;
+	bottom: 65%;
+	left: 50%;
+	margin-left: -60px;
+	font-size:1em;
+	font-weight:normal;
+	text-shadow: 0 0 5px #707070;
+	animation: textShadow 0.15s infinite;
+  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+  opacity: 0;
+  transition: opacity 1s;
+	box-shadow: 25px 35px rgba(0, 25, 0, 0.5);
+}
+.spanT:hover .tooltipSp
+{
+	visibility: visible;
+	opacity: 1;
+}
+
+.alertBox
+{
+	text-align: center;
+	position: absolute;
+	user-select: none;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	padding: 5px 0;
+	z-index: 9;
+    width: 50%; /* or any width you prefer */
+	font-size:2em;
+	font-weight:normal;
+	color: #999999;
+	text-shadow: 0 0 5px #707070;
+	background-color: #660000;
+	box-shadow: 25px 35px rgba(0, 25, 0, 0.5);
+	border: 0.15rem solid green;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.font_small
+{
+	font-size:20px;
+}
+
+.font_normal_white
+{
+	font-size:1em;
+	text-color:#AAFFDD;
+	color:#AAFFDD;
+}
+
+
+.font_stroke
+{
+	text-decoration: line-through;
+	text-decoration-color: red;
+}
+
+.icon_right
+{
+	text-align:right;
+	align:right;
+	width:30px;
+	margin-left:auto;
+	margin-right:0px;
+	margin-top:0px;
+	cursor:pointer;
+	user-select: none;
+}
+
+.unselect
+{
+	user-select: none;
+}
