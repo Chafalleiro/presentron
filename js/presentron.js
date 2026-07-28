@@ -131,11 +131,11 @@ async function loadSlideImages() {
             reject(new Error("Database not initialized"));
             return;
         }
-
+console.log("134")
         const transaction = db.transaction(['slides'], 'readonly');
         const store = transaction.objectStore('slides');
         const request = store.getAll();
-
+console.log("138")
         request.onsuccess = () => {
             const slides = request.result;
             console.log(`Step 4a: Retrieved ${slides ? slides.length : 0} slides from IDB.`);
@@ -146,7 +146,7 @@ async function loadSlideImages() {
                 resolve();
                 return;
             }
-
+console.log("149")
             window.slidesData = slides;
             let loadedCount = 0;
             const total = slides.length;
@@ -172,7 +172,7 @@ async function loadSlideImages() {
                     img.src = slide.imageSrc;
                 });
             };
-
+console.log("175")
             // Cargar todas las imágenes en paralelo
             Promise.all(slides.map(slide => loadImage(slide)))
                 .then(() => {
@@ -184,7 +184,7 @@ async function loadSlideImages() {
                     reject(err);
                 });
         };
-
+console.log("187")
         request.onerror = () => {
             console.error("Error reading from IDB:", request.error);
             reject(request.error);
