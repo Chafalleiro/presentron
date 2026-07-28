@@ -202,75 +202,75 @@ function calcSize(nH, nW, mH, mW){
 //************* Start Proyector ****************************************
 async function startProyector(ndx)
 {
-//Get file data
-let val = await db.get("files", ndx);
-let waitForArr;
-nAns = 0;
-nOk = 0;
-nCan = 0;
-swUpt = false;
-anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
-//Erase slides Store
-await db.clear("slides");
-//Load slides File from files
-var mesg = await slideLoads(val.path,"slides");
-console.log("mesg" , mesg);
-cLoad = false; // Don't set to true yet - wait for images to load
-if(nOk == 1)
-{
-// Wait for writeMedia to complete (swUpt will be set to true)
-waitForArr = setInterval(function () {//Wait for file to load
-if (swUpt == true){
-clearInterval(waitForArr);
-waitForArr = null;
-// Now read the slides from IDB after they've been written
-db.getAll("slides").then(function(datasets) {
-anArr = structuredClone(datasets);
-console.log("Slides loaded from IDB:", anArr.length);
-slIndexes = null;
-slIndexes = structuredClone(emptyArr);
-for(const item of anArr)
-{
-// Iterate through each field in the fields object and create an array of db indexes
-slIndexes.push(item["keySl"]);
-}
-console.log("slIndexes",slIndexes);
-val.path = actFile.name;
-img_count = slIndexes.length;
-let request = db.put("files", val); //Update the file name
-
-// Load all slide images before showing the projector
-loadSlideImages(anArr, function() {
-// All images loaded successfully
-cLoad = true;
-//Show the proyector screen.
-document.getElementById("controls").style.visibility = "visible";
-document.getElementById("slideText").style.visibility = "visible";
-document.getElementById("controls").style.opacity = "100%";
-document.getElementById("slideText").style.opacity = "100%";
-sw_on = true;
-document.getElementById("projector").style.visibility = "visible";
-document.getElementById("projector").style.opacity = "100%";
-sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
-sliFan.autoplay = true;
-sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
-sliTrack.loop = true;
-sliTrack.autoplay = true;
-const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
-const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
-sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
-sliEffects.autoplay = false;
-if(mesg != true)
-{
-showModal('alertW');
-showModal('importData');
-}
-showSlide(0);
-});
-});
-}
-}, 100);
-}
+	//Get file data
+	let val = await db.get("files", ndx);
+	let waitForArr;	
+	nAns = 0;
+	nOk = 0;
+	nCan = 0;
+	swUpt = false;
+	anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
+	//Erase slides Store
+	db.clear("slides");
+	//Load slides File from files
+	var mesg = await slideLoads(val.path,"slides");
+	console.log("mesg" , mesg);
+	cLoad = false; // Don't set to true yet - wait for images to load
+	if(nOk == 1)
+	{
+		clearInterval(waitForArr);
+		waitForArr = null;
+		waitForArr = setInterval(function ()
+		{
+			//Wait for file to load
+			if (swUpt == true)
+			{
+				clearInterval(waitForArr);
+				waitForArr = null;
+				slIndexes = null;
+				slIndexes = structuredClone(emptyArr);
+				for(const item of anArr)
+				{
+					// Iterate through each field in the fields object and create an array of db indexes
+					slIndexes.push(item["keySl"]);
+				}
+				console.log("slIndexes",slIndexes);
+				val.path = actFile.name;
+				img_count = slIndexes.length;
+				let request = db.put("files", val); //Update the file name
+                // Load all slide images before showing the projector
+                loadSlideImages(anArr, function()
+				{
+                    // All images loaded successfully
+                    cLoad = true;
+                    //Show the proyector screen.
+                    document.getElementById("controls").style.visibility = "visible";
+                    document.getElementById("slideText").style.visibility = "visible";
+					document.getElementById("controls").style.opacity = "100%";
+					document.getElementById("slideText").style.opacity = "100%";
+					//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+					sw_on = true;
+					document.getElementById("projector").style.visibility = "visible";
+					document.getElementById("projector").style.opacity = "100%";
+					sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
+					sliFan.autoplay = true;
+					sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
+					sliTrack.loop = true;
+					sliTrack.autoplay = true;
+					const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
+					const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
+					sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
+					sliEffects.autoplay = false;
+					if(mesg != true)
+					{
+						showModal('alertW');
+						showModal('importData');
+					}
+					showSlide(0);
+				});
+			}
+		}, 100);
+	}
 }
 
 //************* Sound helpers ****************************************
