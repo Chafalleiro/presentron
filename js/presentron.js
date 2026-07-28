@@ -224,7 +224,7 @@ async function startProyector() {
         // 2. Load slides from remote (if needed) or just ensure they are in DB
         // If you always want to reload from remote when starting:
         await slideLoads(); 
-
+console.log("await slideLoads(); ");
         // 3. Load images from DB into memory
         // This now waits for slideLoads to finish completely
         const slides = await loadSlideImages();
@@ -239,6 +239,7 @@ async function startProyector() {
         if (typeof renderSlide === 'function') {
             renderSlide(0); 
         }
+console.log("//Show the proyector screen.");
 				//Show the proyector screen.
 				document.getElementById("controls").style.visibility = "visible";
 				document.getElementById("slideText").style.visibility = "visible";
@@ -259,7 +260,7 @@ async function startProyector() {
         if (controls) {
             controls.style.pointerEvents = 'auto';
         }
-
+console.log("// Enable controls");
     } catch (error) {
         console.error("Failed to start projector:", error);
         showFlash("flash", "Error starting projector", 0.1, 1.1);
