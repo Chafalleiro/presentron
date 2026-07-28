@@ -145,16 +145,17 @@ async function askFileLoad(par,msg,st)
  * Returns a promise that resolves when all images are loaded.
  */
 async function loadSlideImages() {
+	console.log("loadSlideImages. Started");	
     return new Promise((resolve, reject) => {
         if (!db) {
             reject(new Error("Database not initialized"));
             return;
         }
-
+	console.log("loadSlideImages. init transaction");	
         const tx = db.transaction(['slides'], 'readonly');
         const store = tx.objectStore('slides');
         const request = store.getAll();
-
+	console.log("loadSlideImages. results");	
         request.onsuccess = () => {
             const slides = request.result;
             
