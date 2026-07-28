@@ -265,7 +265,8 @@ async function startProyector(ndx)
 						showModal('importData');
 					}
 					showSlide(0);
-				})
+				});
+			}
 		}, 100);
 	}
 }
