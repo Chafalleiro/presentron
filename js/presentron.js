@@ -55,46 +55,27 @@ var drtframes = [];  // Hold images.
 var dmgframes = [];  // Hold images.
 
 /**
- * Loads slides from remote JSON and imports to IDB.
- * Returns the loaded data array to ensure the caller knows it's done.
- */
-/**
- * Loads slides from a remote JSON file and imports them into IDB.
- * Does NOT load images into memory; that is handled by loadSlideImages.
+ * Loads slides from remote JSON and saves to IDB.
+ * Does NOT load images into memory yet.
  */
 async function slideLoads() {
+    console.log("Step 1: Fetching remote JSON...");
     try {
-        console.log("Fetching remote slides...");
-        const response = await fetch('slides.json'); // Ajusta la ruta si es necesaria
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const response = await fetch('slides.json'); 
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const jsonData = await response.json();
+        console.log(`Step 2: JSON parsed (${jsonData.length} items). Importing to IDB...`);
 
-        if (!Array.isArray(jsonData) || jsonData.length === 0) {
-            throw new Error("Remote JSON contains no valid slide data");
-        }
-
-        console.log(`Fetched ${jsonData.length} slides. Importing to IDB...`);
+        // Solo importamos. importDt ya espera a que termine la transacción interna.
+        await importDt(jsonData, 'slides', true); 
         
-        // Import with isAutoLoad = true (uses showFlash, non-blocking)
-        if (typeof importDt === 'function') {
-            await importDt(jsonData, 'slides', true); 
-            console.log("Import to IDB completed.");
-        } else {
-            throw new Error("Function 'importDt' is not available.");
-        }
-
-        // IMPORTANT: Do NOT call loadSlideImages() here immediately.
-        // Let the caller (startProyector) decide when to load images after this resolves.
+        console.log("Step 3: IDB Import finished successfully.");
+        // NO llamar a loadSlideImages aquí. El caller decidirá cuándo cargar imágenes.
         
     } catch (error) {
-        console.error("Error loading slides from remote source:", error);
-        if (typeof showFlash === 'function') {
-            showFlash("flash", "Failed to load remote presentation", 0.1, 1.1);
-        }
-        throw error; // Re-throw to stop the chain in startProyector
+        console.error("Error in slideLoads:", error);
+        throw error; // Relanzar para que startProyector se entere
     }
 }
 
@@ -139,72 +120,77 @@ async function askFileLoad(par,msg,st)
 //	return msg;
 }
 
-
 /**
- * Reads slides from IDB and preloads images into memory.
- * Returns a promise that resolves when all images are loaded.
+ * Reads from IDB and preloads images into memory.
  */
 async function loadSlideImages() {
-	console.log("loadSlideImages. Started");	
+    console.log("Step 4: Starting image preload from IDB...");
+    
     return new Promise((resolve, reject) => {
         if (!db) {
             reject(new Error("Database not initialized"));
             return;
         }
-	console.log("loadSlideImages. init transaction");	
-        const tx = db.transaction(['slides'], 'readonly');
-        const store = tx.objectStore('slides');
+
+        const transaction = db.transaction(['slides'], 'readonly');
+        const store = transaction.objectStore('slides');
         const request = store.getAll();
-	console.log("loadSlideImages. results");	
+
         request.onsuccess = () => {
             const slides = request.result;
-            
-            // Safety check: Ensure we have an array
-            if (!Array.isArray(slides)) {
-                console.warn("No slides found in IDB or invalid format.");
+            console.log(`Step 4a: Retrieved ${slides ? slides.length : 0} slides from IDB.`);
+
+            if (!slides || slides.length === 0) {
+                console.warn("No slides found in IDB.");
                 window.slidesData = [];
-                resolve(); // Resolve anyway to not block the app, but with empty slides
-                return;
-            }
-
-            window.slidesData = slides;
-            console.log(`Loaded ${slides.length} slides from IDB into memory.`);
-
-            if (slides.length === 0) {
                 resolve();
                 return;
             }
 
-            // Preload images
-            const imagePromises = slides.map(slide => {
+            window.slidesData = slides;
+            let loadedCount = 0;
+            const total = slides.length;
+
+            // Función auxiliar para cargar una imagen
+            const loadImage = (slide) => {
                 return new Promise((imgResolve) => {
                     if (!slide.imageSrc) {
                         imgResolve();
                         return;
                     }
                     const img = new Image();
-                    img.onload = () => imgResolve();
+                    img.onload = () => {
+                        loadedCount++;
+                        // console.log(`Image loaded: ${loadedCount}/${total}`);
+                        imgResolve();
+                    };
                     img.onerror = () => {
-                        console.warn(`Failed to load image: ${slide.imageSrc}`);
-                        imgResolve(); // Resolve anyway to not stall the whole process
+                        console.error(`Failed to load image: ${slide.imageSrc}`);
+                        loadedCount++; // Contar también como intentado para no bloquear
+                        imgResolve();
                     };
                     img.src = slide.imageSrc;
                 });
-            });
+            };
 
-            Promise.all(imagePromises).then(() => {
-                console.log("All slide images preloaded.");
-                resolve();
-            });
+            // Cargar todas las imágenes en paralelo
+            Promise.all(slides.map(slide => loadImage(slide)))
+                .then(() => {
+                    console.log(`Step 5: All ${total} images preloaded successfully.`);
+                    resolve();
+                })
+                .catch(err => {
+                    console.error("Error preloading images:", err);
+                    reject(err);
+                });
         };
 
         request.onerror = () => {
-            console.error("Error reading slides from IDB:", request.error);
+            console.error("Error reading from IDB:", request.error);
             reject(request.error);
         };
     });
 }
-
 
 function imageLoads(arrImg,arrSrc,cnt)
 {
@@ -247,43 +233,32 @@ function calcSize(nH, nW, mH, mW){
 }
 //************* Start Proyector ****************************************
 /**
- * Main function to start the projector sequence.
+ * Main entry point for the projector.
+ * Orchestrates the sequence: Fetch -> Save IDB -> Load Images -> Show Projector
  */
 async function startProyector() {
+    console.log("--- Starting Projector Sequence ---");
+    
     try {
-        // Step 1: Hide any existing content or reset state
-        // ... (tu código existente para limpiar UI)
-
-        // Step 2: Load data from remote JSON if needed (or always, según tu lógica)
-        // Assuming you always want to refresh from remote when clicking "Proyector"
-        console.log("Starting projector sequence: Fetching data...");
+        // 1. Cargar datos remotos a IDB
         await slideLoads(); 
-        // Execution pauses here until slideLoads (and the IDB write) is fully done.
-
-        // Step 3: Load images from IDB into memory
-        console.log("Data fetched. Now preloading images...");
-        await loadSlideImages();
-        // Execution pauses here until all images are downloaded/decoded.
-
-        // Step 4: Verify we have slides
-        if (!window.slidesData || window.slidesData.length === 0) {
-            console.warn("No slides available to project.");
-            if (typeof showFlash === 'function') {
-                showFlash("flash", "No slides to display", 0.1, 1.1);
-            }
-            return; 
-        }
-
-        // Step 5: Initialize and Show Projector
-        console.log("Images ready. Starting projection...");
-        currentSlideIndex = 0;
-        showProjectorUI(); // Tu función que hace visible el proyector
         
-        // Render first slide
-        renderSlide(currentSlideIndex);
+        // 2. Cargar imágenes de IDB a memoria (Aquí es donde debería aparecer el log de Step 4)
+        console.log("Step 3 complete. Moving to Step 4 (Load Images)...");
+        await loadSlideImages(); 
+        
+        console.log("Step 4 complete. Initializing Projector UI...");
+        
+        // 3. Mostrar el proyector
+        // ... tu lógica existente para mostrar el proyector ...
+        // Ejemplo:
+        // document.getElementById('projector').style.display = 'block';
+        // showCurrentSlide();
+        
+        console.log("--- Projector Ready ---");
 
     } catch (error) {
-        console.error("Critical error starting projector:", error);
+        console.error("Fatal error starting projector:", error);
         if (typeof showFlash === 'function') {
             showFlash("flash", "Error starting projector", 0.1, 1.1);
         }
