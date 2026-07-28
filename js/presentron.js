@@ -72,6 +72,8 @@ async function slideLoads(file,store)
 	swUpt = true;
 	actFile= {name:file};
 	loaded = true;
+	// Write data to IDB immediately after loading from remote file
+	await importDt(slideStruct,"ow",anArr); //dt = store name, m = mode, rr = working array
 	return loaded;
 	}
 	catch (error)
