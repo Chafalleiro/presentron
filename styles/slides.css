@@ -70,7 +70,7 @@
     height: 95vh;
 	top: 20vh;
 	left: 20vh;
-	z-index: 999;
+	z-index: 1045;
     transition: 0.3s;	
 	filter: brightness(60%);
 }
@@ -138,7 +138,7 @@
 	bottom: 0px;
     width: 100%;
     height: 95vm;
-	z-index: 999;
+	z-index: 1050;
 }
 #switches {
 	visibility: hidden;
@@ -147,7 +147,7 @@
 	margin: auto;
 	right:52px;
 	top: 280px;
-	z-index:999;
+	z-index:1060;
     transition: 0.3s;
 	transition-timing-function: cubic-bezier(1, 0, 0, 1);
 }
