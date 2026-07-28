@@ -254,7 +254,7 @@ async function startProyector(ndx)
                                         sliTrack.loop = true;
                                         sliTrack.autoplay = true;
                                                                                 const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
-                                                                                const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,"snd/ventiladorproyectorvideo.mp3");}, 150);
+                                                                                const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
                                                                                 sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
                                         sliEffects.autoplay = false;
                                         if(mesg != true)
