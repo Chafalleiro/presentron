@@ -345,46 +345,40 @@ async function importWin(ds)
 async function importDt(data, storeName, isAutoLoad = false) {
     if (!data || !Array.isArray(data)) {
         console.error("Invalid data provided for import");
-        return;
+        throw new Error("Invalid data format"); // Lanzar error para detener la cadena si falla
     }
 
     try {
         const tx = db.transaction([storeName], "readwrite");
         const store = tx.objectStore(storeName);
         
-        // Clear existing data before importing
         await store.clear(); 
 
-        // Insert new items
         for (let item of data) {
             await store.put(item);
         }
 
-        await tx.complete;
+        // CRUCIAL: Esperar explícitamente a que la transacción termine
+        await tx.complete; 
+        
+        console.log(`Transaction complete for store: ${storeName}`);
 
         if (isAutoLoad) {
-            // Automatic load: Use non-blocking flash notification
-            // Parameters: elementID, message, speed, direction/scale
             if (typeof showFlash === 'function') {
                 showFlash("flash", `Presentation loaded: ${data.length} slides`, 0.1, 1.1);
             }
-            console.log(`Automatic import completed in store: ${storeName}`);
-        } else {
-            // Manual load: Could use a modal or a different flash style if needed
-            // For consistency with auto-load visual feedback, we can still use flash or a modal
-            if (typeof showFlash === 'function') {
-                showFlash("flash", "Data imported successfully", 0.1, 1.1);
-            }
         }
 
-        // Notify other parts of the app that the DB has changed
         window.dispatchEvent(new Event('db-updated'));
+        
+        return true; // Indicar éxito explícito
 
     } catch (error) {
         console.error("Error importing data:", error);
         if (typeof showFlash === 'function') {
             showFlash("flash", "Error loading data", 0.1, 1.1);
         }
+        throw error; // Propagar el error para que slideLoads lo capture
     }
 }
 
