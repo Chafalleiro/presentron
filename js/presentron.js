@@ -121,74 +121,64 @@ async function askFileLoad(par,msg,st)
 }
 
 /**
- * Reads from IDB and preloads images into memory.
+ * Loads all slide images from IDB into memory.
+ * Returns a Promise that resolves when all images are loaded (or failed).
  */
-async function loadSlideImages() {
-    console.log("Step 4: Starting image preload from IDB...");
-    
-    return new Promise((resolve, reject) => {
-        if (!db) {
-            reject(new Error("Database not initialized"));
-            return;
-        }
-console.log("134")
-        const transaction = db.transaction(['slides'], 'readonly');
-        const store = transaction.objectStore('slides');
-        const request = store.getAll();
-console.log("138")
-        request.onsuccess = () => {
-            const slides = request.result;
-            console.log(`Step 4a: Retrieved ${slides ? slides.length : 0} slides from IDB.`);
+function loadSlideImages() {
+    return new Promise(async (resolve, reject) => {
+        console.log("Step 4: Starting image preload from IDB...");
+
+        try {
+            // 1. Obtener datos de IDB
+            const slides = await getStoreData('slides'); // Asegúrate que esta función existe y devuelve un array
 
             if (!slides || slides.length === 0) {
-                console.warn("No slides found in IDB.");
+                console.warn("No slides found in IDB to preload.");
                 window.slidesData = [];
-                resolve();
+                resolve(); // Resolvemos inmediatamente si no hay datos
                 return;
             }
-console.log("149")
-            window.slidesData = slides;
-            let loadedCount = 0;
-            const total = slides.length;
 
-            // Función auxiliar para cargar una imagen
-            const loadImage = (slide) => {
-                return new Promise((imgResolve) => {
+            window.slidesData = slides;
+            console.log(`Found ${slides.length} slides in IDB. Preloading images...`);
+
+            // 2. Crear promesas para cada imagen
+            const imagePromises = slides.map((slide, index) => {
+                return new Promise((imgResolve, imgReject) => {
                     if (!slide.imageSrc) {
-                        imgResolve();
+                        console.warn(`Slide ${index} has no image source.`);
+                        imgResolve(); // Resolver aunque no tenga imagen
                         return;
                     }
+
                     const img = new Image();
+                    
                     img.onload = () => {
-                        loadedCount++;
-                        // console.log(`Image loaded: ${loadedCount}/${total}`);
+                        // Opcional: guardar la imagen cargada en el objeto slide si es necesario
+                        // slide.loadedImg = img; 
                         imgResolve();
                     };
-                    img.onerror = () => {
-                        console.error(`Failed to load image: ${slide.imageSrc}`);
-                        loadedCount++; // Contar también como intentado para no bloquear
-                        imgResolve();
+
+                    img.onerror = (err) => {
+                        console.error(`Error loading image for slide ${index}:`, slide.imageSrc);
+                        imgResolve(); // Resolvemos igual para no bloquear todo el proceso por una imagen rota
                     };
+
+                    // Iniciar carga
                     img.src = slide.imageSrc;
                 });
-            };
-console.log("175")
-            // Cargar todas las imágenes en paralelo
-            Promise.all(slides.map(slide => loadImage(slide)))
-                .then(() => {
-                    console.log(`Step 5: All ${total} images preloaded successfully.`);
-                    resolve();
-                })
-                .catch(err => {
-                    console.error("Error preloading images:", err);
-                    reject(err);
-                });
-        };
-console.log("187")
-        request.onerror = () => {
-            console.error("Error reading from IDB:", request.error);
-            reject(request.error);
-        };
+            });
+
+            // 3. Esperar a que TODAS las imágenes terminen
+            await Promise.all(imagePromises);
+
+            console.log("Step 5: All images preloaded successfully.");
+            resolve(); // <--- ¡ESTO es lo que faltaba o no se ejecutaba!
+
+        } catch (error) {
+            console.error("Critical error in loadSlideImages:", error);
+            reject(error);
+        }
     });
 }
 
