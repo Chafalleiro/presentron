@@ -260,12 +260,13 @@ async function startProyector(ndx)
 					sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
 					sliEffects.autoplay = false;
 					if(mesg != true)
-						{
+					{
 						showModal('alertW');
 						showModal('importData');
-						}
+					}
 					showSlide(0);
 				});
+			}
 		}, 100);
 	}
 }
