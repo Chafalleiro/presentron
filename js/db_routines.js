@@ -339,6 +339,14 @@ async function importWin(ds)
 async function importDt(dt,m,rr) //dt = store name, m = mode, rr = working array
 {
 	console.log("store "+dt.store+" mode "+m);
+	// If rr is already provided (data from remote fetch), skip file input and write directly
+	if(rr && rr.length > 0)
+	{
+		console.log("Writing data directly from array");
+		writeMedia(m, dt, rr);
+		return;
+	}
+	// Otherwise, use file input for manual import
 	fileData = document.createElement("input");
 	fileData.setAttribute("type", "file");
 	fileData.setAttribute("accept", ".json");
