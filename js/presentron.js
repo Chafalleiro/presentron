@@ -218,8 +218,11 @@ async function startProyector(ndx)
 	{
 		clearInterval(waitForArr);
 		waitForArr = null;
-		waitForArr = setInterval(function () {//Wait for file to load
-			if (swUpt == true){
+		waitForArr = setInterval(function ()
+		{
+			//Wait for file to load
+			if (swUpt == true)
+			{
 				clearInterval(waitForArr);
 				waitForArr = null;
 				slIndexes = null;
@@ -233,38 +236,36 @@ async function startProyector(ndx)
 				val.path = actFile.name;
 				img_count = slIndexes.length;
 				let request = db.put("files", val); //Update the file name
-
-
-                                // Load all slide images before showing the projector
-                                loadSlideImages(anArr, function() {
-                                        // All images loaded successfully
-                                        cLoad = true;
-                                                                                //Show the proyector screen.
-                                        document.getElementById("controls").style.visibility = "visible";
-                                        document.getElementById("slideText").style.visibility = "visible";
-                                        document.getElementById("controls").style.opacity = "100%";
-                                        document.getElementById("slideText").style.opacity = "100%";
-                                        //document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
-                                        sw_on = true;
-                                                                                document.getElementById("projector").style.visibility = "visible";
-                                        document.getElementById("projector").style.opacity = "100%";
-                                                                                sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
-                                        sliFan.autoplay = true;
-                                                                                sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
-                                        sliTrack.loop = true;
-                                        sliTrack.autoplay = true;
-                                                                                const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
-                                                                                const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
-                                                                                sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
-                                        sliEffects.autoplay = false;
-                                        if(mesg != true)
-                                        {
-                                        showModal('alertW');
-                                        showModal('importData');
-                                        }
-                                        showSlide(0);
-                                        }
-                                                                        });
+                // Load all slide images before showing the projector
+                loadSlideImages(anArr, function()
+				{
+                    // All images loaded successfully
+                    cLoad = true;
+                    //Show the proyector screen.
+                    document.getElementById("controls").style.visibility = "visible";
+                    document.getElementById("slideText").style.visibility = "visible";
+					document.getElementById("controls").style.opacity = "100%";
+					document.getElementById("slideText").style.opacity = "100%";
+					//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+					sw_on = true;
+					document.getElementById("projector").style.visibility = "visible";
+					document.getElementById("projector").style.opacity = "100%";
+					sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
+					sliFan.autoplay = true;
+					sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
+					sliTrack.loop = true;
+					sliTrack.autoplay = true;
+					const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
+					const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
+					sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
+					sliEffects.autoplay = false;
+					if(mesg != true)
+						{
+						showModal('alertW');
+						showModal('importData');
+						}
+					showSlide(0);
+				});
 		}, 100);
 	}
 }
