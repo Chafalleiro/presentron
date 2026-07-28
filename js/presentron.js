@@ -243,7 +243,8 @@ async function startProyector() {
         // Make projector visible
         const projector = document.getElementById('projector');
         if (projector) {
-            projector.style.display = 'block';
+			projector.style.visibility = "visible";
+			projector.style.opacity = "100%";
             projector.style.zIndex = '1045'; // Ensure correct layer
         }
 
