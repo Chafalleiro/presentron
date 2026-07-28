@@ -336,27 +336,56 @@ async function importWin(ds)
 	
 	showModal("importData");
 }
-async function importDt(dt,m,rr) //dt = store name, m = mode, rr = working array
-{
-	console.log("store "+dt.store+" mode "+m);
-	// If rr is already provided (data from remote fetch), skip file input and write directly
-	if(rr && rr.length > 0)
-	{
-		console.log("Writing data directly from array");
-		writeMedia(m, dt, rr);
-		return;
-	}
-	// Otherwise, use file input for manual import
-	fileData = document.createElement("input");
-	fileData.setAttribute("type", "file");
-	fileData.setAttribute("accept", ".json");
-	fileData.setAttribute("name", "fileData"); // You may want to change this
-	fileData.style.visibility = "hidden";
-	document.body.appendChild(fileData);
-	console.log("Loading data");
-	fileData.addEventListener('change', function(e){y(dt,m,rr);}, false);
-	fileData.click();
-	document.body.removeChild(fileData);
+/**
+ * Imports data into the specified store.
+ * @param {Array} data - The array of data items to import.
+ * @param {string} storeName - The name of the IDB store (e.g., 'slides').
+ * @param {boolean} isAutoLoad - If true, uses showFlash (non-blocking). If false, implies manual user action.
+ */
+async function importDt(data, storeName, isAutoLoad = false) {
+    if (!data || !Array.isArray(data)) {
+        console.error("Invalid data provided for import");
+        return;
+    }
+
+    try {
+        const tx = db.transaction([storeName], "readwrite");
+        const store = tx.objectStore(storeName);
+        
+        // Clear existing data before importing
+        await store.clear(); 
+
+        // Insert new items
+        for (let item of data) {
+            await store.put(item);
+        }
+
+        await tx.complete;
+
+        if (isAutoLoad) {
+            // Automatic load: Use non-blocking flash notification
+            // Parameters: elementID, message, speed, direction/scale
+            if (typeof showFlash === 'function') {
+                showFlash("flash", `Presentation loaded: ${data.length} slides`, 0.1, 1.1);
+            }
+            console.log(`Automatic import completed in store: ${storeName}`);
+        } else {
+            // Manual load: Could use a modal or a different flash style if needed
+            // For consistency with auto-load visual feedback, we can still use flash or a modal
+            if (typeof showFlash === 'function') {
+                showFlash("flash", "Data imported successfully", 0.1, 1.1);
+            }
+        }
+
+        // Notify other parts of the app that the DB has changed
+        window.dispatchEvent(new Event('db-updated'));
+
+    } catch (error) {
+        console.error("Error importing data:", error);
+        if (typeof showFlash === 'function') {
+            showFlash("flash", "Error loading data", 0.1, 1.1);
+        }
+    }
 }
 
 function y(dt,mo,rr) {
