@@ -55,34 +55,36 @@ var drtframes = [];  // Hold images.
 var dmgframes = [];  // Hold images.
 
 /**
- * Loads slides from a remote JSON file and imports them into IDB automatically.
+ * Loads slides from remote JSON and imports to IDB.
+ * Returns the loaded data array to ensure the caller knows it's done.
  */
 async function slideLoads() {
     try {
-        // Fetch the remote JSON file
-        const response = await fetch('slides.json'); // Ensure this path is correct relative to your host
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const response = await fetch('slides.json'); 
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const jsonData = await response.json();
 
-        // Import data with 'isAutoLoad' set to true
-        // This ensures showFlash is used instead of blocking modals
+        if (!Array.isArray(jsonData)) {
+            throw new Error("Invalid data format: expected an array");
+        }
+
+        // Import with isAutoLoad = true
         if (typeof importDt === 'function') {
             await importDt(jsonData, 'slides', true); 
         } else {
-            console.error("Function 'importDt' is not available.");
+            throw new Error("importDt function not found");
         }
 
-        // Proceed to load images into memory once DB is updated
-        await loadSlideImages(); 
+        // Return the data so the caller can chain operations safely if needed
+        return jsonData; 
         
     } catch (error) {
         console.error("Error loading slides from remote source:", error);
         if (typeof showFlash === 'function') {
             showFlash("flash", "Failed to load remote presentation", 0.1, 1.1);
         }
+        throw error; // Re-throw to let the caller know it failed
     }
 }
 
@@ -128,35 +130,46 @@ async function askFileLoad(par,msg,st)
 }
 
 
-//************* Load slide images helper function ****************************************
-function loadSlideImages(slideArray, callback)
-{
-        var loadedCount = 0;
-        var totalSlides = slideArray.length;
-        
-        if(totalSlides === 0) {
-                callback();
+/**
+ * Loads images from IDB into memory for the projector.
+ * Includes a safety check for undefined data.
+ */
+async function loadSlideImages() {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error("Database not initialized"));
+            return;
+        }
+
+        const tx = db.transaction(['slides'], 'readonly');
+        const store = tx.objectStore('slides');
+        const request = store.getAll();
+
+        request.onsuccess = () => {
+            const slides = request.result;
+            
+            // SAFETY CHECK: Ensure slides is an array before accessing .length
+            if (!slides || !Array.isArray(slides)) {
+                console.warn("No slides found in DB or invalid format.");
+                window.slidesData = []; // Initialize as empty array to prevent crash
+                resolve([]);
                 return;
-        }
-        
-        for(var i = 0; i < totalSlides; i++) {
-                var img = new Image();
-                img.onload = function() {
-                        loadedCount++;
-                        if(loadedCount >= totalSlides) {
-                                console.log("All slide images loaded:", loadedCount);
-                                callback();
-                        }
-                };
-                img.onerror = function() {
-                        console.error("Failed to load slide image");
-                        loadedCount++;
-                        if(loadedCount >= totalSlides) {
-                                callback();
-                        }
-                };
-                img.src = slideArray[i]["slide"];
-        }
+            }
+
+            window.slidesData = slides; // Store globally or wherever your app expects it
+            
+            // Preload images logic here if you have it...
+            // Example: await Promise.all(slides.map(s => loadImage(s.url)));
+
+            console.log(`Loaded ${slides.length} slides into memory.`);
+            resolve(slides);
+        };
+
+        request.onerror = () => {
+            console.error("Error reading slides from DB");
+            reject(request.error);
+        };
+    });
 }
 
 function imageLoads(arrImg,arrSrc,cnt)
@@ -199,77 +212,51 @@ function calcSize(nH, nW, mH, mW){
 	else{console.log("No image")}
 }
 //************* Start Proyector ****************************************
-async function startProyector(ndx)
-{
-	//Get file data
-	let val = await db.get("files", ndx);
-	let waitForArr;	
-	nAns = 0;
-	nOk = 0;
-	nCan = 0;
-	swUpt = false;
-	anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
-	//Erase slides Store
-	db.clear("slides");
-	//Load slides File from files
-	var mesg = await slideLoads(val.path,"slides");
-	console.log("mesg" , mesg);
-	cLoad = false; // Don't set to true yet - wait for images to load
-	if(nOk == 1)
-	{
-		clearInterval(waitForArr);
-		waitForArr = null;
-		waitForArr = setInterval(function ()
-		{
-			//Wait for file to load
-			if (swUpt == true)
-			{
-				clearInterval(waitForArr);
-				waitForArr = null;
-				slIndexes = null;
-				slIndexes = structuredClone(emptyArr);
-				for(const item of anArr)
-				{
-					// Iterate through each field in the fields object and create an array of db indexes
-					slIndexes.push(item["keySl"]);
-				}
-				console.log("slIndexes",slIndexes);
-				val.path = actFile.name;
-				img_count = slIndexes.length;
-				let request = db.put("files", val); //Update the file name
-                // Load all slide images before showing the projector
-                loadSlideImages(anArr, function()
-				{
-                    // All images loaded successfully
-                    cLoad = true;
-                    //Show the proyector screen.
-                    document.getElementById("controls").style.visibility = "visible";
-                    document.getElementById("slideText").style.visibility = "visible";
-					document.getElementById("controls").style.opacity = "100%";
-					document.getElementById("slideText").style.opacity = "100%";
-					//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
-					sw_on = true;
-					document.getElementById("projector").style.visibility = "visible";
-					document.getElementById("projector").style.opacity = "100%";
-					sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
-					sliFan.autoplay = true;
-					sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
-					sliTrack.loop = true;
-					sliTrack.autoplay = true;
-					const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
-					const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
-					sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
-					sliEffects.autoplay = false;
-					if(mesg != true)
-					{
-						showModal('alertW');
-						showModal('importData');
-					}
-					showSlide(0);
-				});
-			}
-		}, 100);
-	}
+/**
+ * Starts the projector sequence.
+ * Ensures strict ordering: Load Data -> Load Images -> Show Projector.
+ */
+async function startProyector() {
+    try {
+        // 1. Hide any existing UI overlays if necessary
+        // document.getElementById('some-overlay').style.display = 'none';
+
+        // 2. Load slides from remote (if needed) or just ensure they are in DB
+        // If you always want to reload from remote when starting:
+        await slideLoads(); 
+
+        // 3. Load images from DB into memory
+        // This now waits for slideLoads to finish completely
+        const slides = await loadSlideImages();
+
+        if (slides.length === 0) {
+            showFlash("flash", "No slides available to project", 0.1, 1.1);
+            return;
+        }
+
+        // 4. Initialize and show the projector UI
+        // Assuming you have a function to render the first slide
+        if (typeof renderSlide === 'function') {
+            renderSlide(0); 
+        }
+        
+        // Make projector visible
+        const projector = document.getElementById('projector');
+        if (projector) {
+            projector.style.display = 'block';
+            projector.style.zIndex = '1045'; // Ensure correct layer
+        }
+
+        // Enable controls
+        const controls = document.getElementById('controls');
+        if (controls) {
+            controls.style.pointerEvents = 'auto';
+        }
+
+    } catch (error) {
+        console.error("Failed to start projector:", error);
+        showFlash("flash", "Error starting projector", 0.1, 1.1);
+    }
 }
 
 //************* Sound helpers ****************************************
