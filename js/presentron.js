@@ -239,7 +239,13 @@ async function startProyector() {
         if (typeof renderSlide === 'function') {
             renderSlide(0); 
         }
-        
+				//Show the proyector screen.
+				document.getElementById("controls").style.visibility = "visible";
+				document.getElementById("slideText").style.visibility = "visible";
+				document.getElementById("controls").style.opacity = "100%";
+				document.getElementById("slideText").style.opacity = "100%";
+				//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+				sw_on = true;        
         // Make projector visible
         const projector = document.getElementById('projector');
         if (projector) {
