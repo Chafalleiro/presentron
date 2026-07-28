@@ -54,37 +54,36 @@ var aniframes = [];  // Hold images.
 var drtframes = [];  // Hold images.
 var dmgframes = [];  // Hold images.
 
-async function slideLoads(file,store)
-{
-	console.log("Slides file",file);
-	const url = file;
-	var loaded = false;
-	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-		throw new Error(`Response status: ${response.status}`);
-		return loaded;
-		}
-	//const result = await response.json();
-	anArr = await response.json();
-	anArr.splice(0, 1);//Remove the headers.
-	nOk = 1;
-	swUpt = true;
-	actFile= {name:file};
-	loaded = true;
-	// Write data to IDB immediately after loading from remote file
-	await importDt(slideStruct,"ow",anArr); //dt = store name, m = mode, rr = working array
-	return loaded;
-	}
-	catch (error)
-		{
-		console.error(error.message);
-		await drawAsk("Datafile not found on server.<br>Would you like to load a local file?")
-		loaded = questionLoop("askFileLoad", 1, store)
-		console.log("MESG",loaded);
-		return loaded;
-		}
-	return loaded;		
+/**
+ * Loads slides from a remote JSON file and imports them into IDB automatically.
+ */
+async function slideLoads() {
+    try {
+        // Fetch the remote JSON file
+        const response = await fetch('slides.json'); // Ensure this path is correct relative to your host
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const jsonData = await response.json();
+
+        // Import data with 'isAutoLoad' set to true
+        // This ensures showFlash is used instead of blocking modals
+        if (typeof importDt === 'function') {
+            await importDt(jsonData, 'slides', true); 
+        } else {
+            console.error("Function 'importDt' is not available.");
+        }
+
+        // Proceed to load images into memory once DB is updated
+        await loadSlideImages(); 
+        
+    } catch (error) {
+        console.error("Error loading slides from remote source:", error);
+        if (typeof showFlash === 'function') {
+            showFlash("flash", "Failed to load remote presentation", 0.1, 1.1);
+        }
+    }
 }
 
 function drawAsk(msg)
