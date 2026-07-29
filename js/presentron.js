@@ -254,7 +254,10 @@ function calcSize(nH, nW, mH, mW){
  */
 async function startProyector() {
     console.log("--- Starting Projector Sequence ---");
-    
+
+	//Erase slides Store
+	db.clear("slides");
+
     try {
         // 1. Cargar datos remotos a IDB
         await slideLoads(); 
@@ -265,17 +268,30 @@ async function startProyector() {
         
         console.log("Step 4 complete. Initializing Projector UI...");
         
-				//Show the proyector screen.
-				document.getElementById("controls").style.visibility = "visible";
-				document.getElementById("slideText").style.visibility = "visible";
-				document.getElementById("controls").style.opacity = "100%";
-				document.getElementById("slideText").style.opacity = "100%";
-				//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
-				sw_on = true;
+        //Show the proyector screen.
+        document.getElementById("controls").style.visibility = "visible";
+        document.getElementById("slideText").style.visibility = "visible";
+        document.getElementById("controls").style.opacity = "100%";
+        document.getElementById("slideText").style.opacity = "100%";
+        //document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+        sw_on = true;
 	
-				document.getElementById("projector").style.visibility = "visible";
-				document.getElementById("projector").style.opacity = "100%";
-				showSlide(0);
+        document.getElementById("projector").style.visibility = "visible";
+        document.getElementById("projector").style.opacity = "100%";
+        
+		sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
+        sliFan.autoplay = true;
+	
+        sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
+        sliTrack.loop = true;
+        sliTrack.autoplay = true;
+
+        const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
+        const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,"snd/ventiladorproyectorvideo.mp3");}, 150);
+        sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
+        sliEffects.autoplay = false;
+		
+		showSlide(0);
 				
         console.log("--- Projector Ready ---");
 
