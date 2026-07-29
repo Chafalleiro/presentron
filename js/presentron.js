@@ -133,7 +133,7 @@ function loadSlideImages() {
         // ej: dbGetAll('slides') o readStore('slides')
         
         // --- INICIO BLOQUE DE LECTURA DIRECTA (Seguro si no hay función helper) ---
-        const request = indexedDB.open(window.dbName || "PresentronDB", window.dbVersion || 1);
+        const request = indexedDB.open(window.dbName || "presentron", window.dbVersion || 1);
         
         request.onerror = (event) => {
             console.error("Database error: ", event.target.errorCode);
