@@ -739,43 +739,47 @@ async function searchNadd(st,vl,ky,mo)
 
 async function writeMedia(mode, dstore, arrayUsed) //Write to database.
 {
-	let tx = db.transaction(dstore.store, 'readwrite');
-	swUpt = false;
-	switch(mode)
-	{
-		case "ow":
-			console.log("Overwriting.");
-			arrayUsed.forEach(rrUsed => {
-				let request = tx.objectStore(dstore.store).put(rrUsed);
-			});
-		break;
+    let tx = db.transaction(dstore.store, 'readwrite');
+    swUpt = false;
+    switch(mode)
+    {
+        case "ow":
+            console.log("Overwriting.");
+            arrayUsed.forEach(rrUsed => {
+                let request = tx.objectStore(dstore.store).put(rrUsed);
+            });
+        break;
 
-		case "ask":
-		console.log("Asking.");
-			let awaitableVar = 0;
-			for(let i=0; i< arrayUsed.length; i++)
-			{
-				console.log("dstore.index",dstore.index,"arrayUsed[i][dstore.index]",arrayUsed[i][dstore.index]);
-				awaitableVar = await searchNadd(dstore.store, arrayUsed[i], arrayUsed[i][dstore.index], mode);
-			}
-			await drawCompare(foundArr,0);
-			await questionLoop("askOverwrite", foundArr.length, dstore.store)
-		break;
+        case "ask":
+        console.log("Asking.");
+            let awaitableVar = 0;
+            for(let i=0; i< arrayUsed.length; i++)
+            {
+                console.log("dstore.index",dstore.index,"arrayUsed[i][dstore.index]",arrayUsed[i][dstore.index]);
+                awaitableVar = await searchNadd(dstore.store, arrayUsed[i], arrayUsed[i][dstore.index], mode);
+            }
+            await drawCompare(foundArr,0);
+            await questionLoop("askOverwrite", foundArr.length, dstore.store)
+        break;
 
-		case "sk":
-			console.log("Skipping.");
-			arrayUsed.forEach(rrUsed =>
-			{
-				searchNadd(dstore.store, rrUsed, rrUsed[dstore.index], mode);
-			});
-		break;
-	}
-	let objectStore = tx.objectStore(dstore.store);
-	var datasets = await objectStore.getAll(); //Refresh the arrays
-	anArr = structuredClone(datasets);
-	showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
-	swUpt = true;
-	console.log("anArr wrotemedia",anArr);
+        case "sk":
+            console.log("Skipping.");
+            arrayUsed.forEach(rrUsed =>
+            {
+                searchNadd(dstore.store, rrUsed, rrUsed[dstore.index], mode);
+            });
+        break;
+    }
+    
+    // Wait for the transaction to complete before proceeding
+    await tx.complete;
+    
+    let objectStore = tx.objectStore(dstore.store);
+    var datasets = await objectStore.getAll(); //Refresh the arrays
+    anArr = structuredClone(datasets);
+    showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
+    swUpt = true;
+    console.log("anArr wrotemedia",anArr);
 }
 
 //Delete registers
