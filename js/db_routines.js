@@ -336,27 +336,78 @@ async function importWin(ds)
 	
 	showModal("importData");
 }
-async function importDt(dt,m,rr) //dt = store name, m = mode, rr = working array
+async function importDt(dt, m, rr) //dt = store name, m = mode, rr = working array
 {
-	console.log("store "+dt.store+" mode "+m);
-	// If rr is already provided (data from remote fetch), skip file input and write directly
-	if(rr && rr.length > 0)
-	{
-		console.log("Writing data directly from array");
-		writeMedia(m, dt, rr);
-		return;
-	}
-	// Otherwise, use file input for manual import
-	fileData = document.createElement("input");
-	fileData.setAttribute("type", "file");
-	fileData.setAttribute("accept", ".json");
-	fileData.setAttribute("name", "fileData"); // You may want to change this
-	fileData.style.visibility = "hidden";
-	document.body.appendChild(fileData);
-	console.log("Loading data");
-	fileData.addEventListener('change', function(e){y(dt,m,rr);}, false);
-	fileData.click();
-	document.body.removeChild(fileData);
+    console.log("store "+dt.store+" mode "+m);
+    // If rr is already provided (data from remote fetch), skip file input and write directly
+    if(rr && rr.length > 0)
+    {
+        console.log("Writing data directly from array");
+        writeMedia(m, dt, rr);
+        return;
+    }
+    // Otherwise, use file input for manual import
+    fileData = document.createElement("input");
+    fileData.setAttribute("type", "file");
+    fileData.setAttribute("accept", ".json");
+    fileData.setAttribute("name", "fileData"); // You may want to change this
+    fileData.style.visibility = "hidden";
+    document.body.appendChild(fileData);
+    console.log("Loading data");
+    fileData.addEventListener('change', function(e){y(dt,m,rr);}, false);
+    fileData.click();
+    document.body.removeChild(fileData);
+}
+
+/**
+ * Validates JSON data by comparing header with expected structure.
+ * Replicates the logic from function y(dt, mo, rr).
+ * @param {Array} jsonData - The parsed JSON array (including header).
+ * @param {Object} dt - The data structure definition (e.g., slideStruct).
+ * @returns {Array|null} - Returns the data array without header if valid, null otherwise.
+ */
+function validateAndFilterData(jsonData, dt) {
+    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
+        console.error("Invalid JSON data: empty or not an array");
+        return null;
+    }
+    
+    let header = jsonData[0];
+    let cnt = 0;
+    let eqR = 0;
+    
+    console.log("Validating header:", header);
+    console.log("Expected store:", dt.store);
+    
+    let impStore = dt.store;
+    
+    // Check if store name matches
+    if (header.store !== impStore) {
+        console.error("Import error. The store declared in file is \"" + header.store + 
+                      "\" while the expected store is \"" + impStore + "\". Ignoring import.");
+        return null;
+    }
+    
+    // Compare field keys
+    let keysIn = header.keys.slice().sort();
+    let keysSt = dt.keys.slice().sort();
+    cnt = Object.keys(dt.keys).length;
+    
+    for (let i = 0; i < cnt; i++) {
+        if (keysSt[i] === keysIn[i]) {
+            eqR++;
+        }
+    }
+    
+    if (eqR !== cnt) {
+        console.error("Import error. Declared fields (" + cnt + ") don't match the imported file fields (" + eqR + "). Ignoring import.");
+        return null;
+    }
+    
+    // Validation passed, remove header and return data
+    let filteredData = jsonData.slice(1);
+    console.log("Validation successful. " + filteredData.length + " records found.");
+    return filteredData;
 }
 
 function y(dt,mo,rr) {
@@ -716,43 +767,47 @@ async function searchNadd(st,vl,ky,mo)
 
 async function writeMedia(mode, dstore, arrayUsed) //Write to database.
 {
-	let tx = db.transaction(dstore.store, 'readwrite');
-	swUpt = false;
-	switch(mode)
-	{
-		case "ow":
-			console.log("Overwriting.");
-			arrayUsed.forEach(rrUsed => {
-				let request = tx.objectStore(dstore.store).put(rrUsed);
-			});
-		break;
+    let tx = db.transaction(dstore.store, 'readwrite');
+    swUpt = false;
+    switch(mode)
+    {
+        case "ow":
+            console.log("Overwriting.");
+            arrayUsed.forEach(rrUsed => {
+                let request = tx.objectStore(dstore.store).put(rrUsed);
+            });
+        break;
 
-		case "ask":
-		console.log("Asking.");
-			let awaitableVar = 0;
-			for(let i=0; i< arrayUsed.length; i++)
-			{
-				console.log("dstore.index",dstore.index,"arrayUsed[i][dstore.index]",arrayUsed[i][dstore.index]);
-				awaitableVar = await searchNadd(dstore.store, arrayUsed[i], arrayUsed[i][dstore.index], mode);
-			}
-			await drawCompare(foundArr,0);
-			await questionLoop("askOverwrite", foundArr.length, dstore.store)
-		break;
+        case "ask":
+        console.log("Asking.");
+            let awaitableVar = 0;
+            for(let i=0; i< arrayUsed.length; i++)
+            {
+                console.log("dstore.index",dstore.index,"arrayUsed[i][dstore.index]",arrayUsed[i][dstore.index]);
+                awaitableVar = await searchNadd(dstore.store, arrayUsed[i], arrayUsed[i][dstore.index], mode);
+            }
+            await drawCompare(foundArr,0);
+            await questionLoop("askOverwrite", foundArr.length, dstore.store)
+        break;
 
-		case "sk":
-			console.log("Skipping.");
-			arrayUsed.forEach(rrUsed =>
-			{
-				searchNadd(dstore.store, rrUsed, rrUsed[dstore.index], mode);
-			});
-		break;
-	}
-	let objectStore = tx.objectStore(dstore.store);
-	var datasets = await objectStore.getAll(); //Refresh the arrays
-	anArr = structuredClone(datasets);
-	showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
-	swUpt = true;
-	console.log("anArr wrotemedia",anArr);
+        case "sk":
+            console.log("Skipping.");
+            arrayUsed.forEach(rrUsed =>
+            {
+                searchNadd(dstore.store, rrUsed, rrUsed[dstore.index], mode);
+            });
+        break;
+    }
+    
+    // Wait for the transaction to complete before proceeding
+    await tx.complete;
+    
+    let objectStore = tx.objectStore(dstore.store);
+    var datasets = await objectStore.getAll(); //Refresh the arrays
+    anArr = structuredClone(datasets);
+    showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
+    swUpt = true;
+    console.log("anArr wrotemedia",anArr);
 }
 
 //Delete registers

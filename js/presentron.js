@@ -54,37 +54,44 @@ var aniframes = [];  // Hold images.
 var drtframes = [];  // Hold images.
 var dmgframes = [];  // Hold images.
 
-async function slideLoads(file,store)
-{
-	console.log("Slides file",file);
-	const url = file;
-	var loaded = false;
-	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-		throw new Error(`Response status: ${response.status}`);
-		return loaded;
-		}
-	//const result = await response.json();
-	anArr = await response.json();
-	anArr.splice(0, 1);//Remove the headers.
-	nOk = 1;
-	swUpt = true;
-	actFile= {name:file};
-	loaded = true;
-	// Write data to IDB immediately after loading from remote file
-	await importDt(slideStruct,"ow",anArr); //dt = store name, m = mode, rr = working array
-	return loaded;
-	}
-	catch (error)
-		{
-		console.error(error.message);
-		await drawAsk("Datafile not found on server.<br>Would you like to load a local file?")
-		loaded = questionLoop("askFileLoad", 1, store)
-		console.log("MESG",loaded);
-		return loaded;
-		}
-	return loaded;		
+async function slideLoads(file, store) {
+    console.log("Slides file", file);
+    const url = file;
+    var loaded = false;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        
+        const jsonData = await response.json();
+        
+        // Validate and filter data using header comparison (same logic as function y in db_routines.js)
+        const validatedData = validateAndFilterData(jsonData, slideStruct);
+        
+        if (!validatedData) {
+            throw new Error("Data validation failed: Header mismatch");
+        }
+        
+        anArr = validatedData;
+        nOk = 1;
+        swUpt = true;
+        actFile = {name: file};
+        loaded = true;
+        
+        // Write data to IDB immediately after loading from remote file
+        // Pass the already-validated data directly to writeMedia
+        await writeMedia("ow", slideStruct, anArr);
+        return loaded;
+    }
+    catch (error) {
+        console.error(error.message);
+        await drawAsk("Datafile not found on server.<br>Would you like to load a local file?");
+        loaded = questionLoop("askFileLoad", 1, store);
+        console.log("MESG", loaded);
+        return loaded;
+    }
+    return loaded;		
 }
 
 function drawAsk(msg)
