@@ -265,12 +265,18 @@ async function startProyector() {
         
         console.log("Step 4 complete. Initializing Projector UI...");
         
-        // 3. Mostrar el proyector
-        // ... tu lógica existente para mostrar el proyector ...
-        // Ejemplo:
-        // document.getElementById('projector').style.display = 'block';
-        // showCurrentSlide();
-        
+				//Show the proyector screen.
+				document.getElementById("controls").style.visibility = "visible";
+				document.getElementById("slideText").style.visibility = "visible";
+				document.getElementById("controls").style.opacity = "100%";
+				document.getElementById("slideText").style.opacity = "100%";
+				//document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+				sw_on = true;
+	
+				document.getElementById("projector").style.visibility = "visible";
+				document.getElementById("projector").style.opacity = "100%";
+				showSlide(0);
+				
         console.log("--- Projector Ready ---");
 
     } catch (error) {
