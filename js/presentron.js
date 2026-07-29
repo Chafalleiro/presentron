@@ -58,17 +58,17 @@ var dmgframes = [];  // Hold images.
  * Loads slides from remote JSON and saves to IDB.
  * Does NOT load images into memory yet.
  */
-async function slideLoads() {
+async function slideLoads(file,store) {
     console.log("Step 1: Fetching remote JSON...");
     try {
-        const response = await fetch('slides.json'); 
+        const response = await fetch(file); 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const jsonData = await response.json();
         console.log(`Step 2: JSON parsed (${jsonData.length} items). Importing to IDB...`);
 
         // Solo importamos. importDt ya espera a que termine la transacción interna.
-        await importDt(jsonData, 'slides', true); 
+        await importDt(jsonData, store, true); 
         
         console.log("Step 3: IDB Import finished successfully.");
         // NO llamar a loadSlideImages aquí. El caller decidirá cuándo cargar imágenes.
@@ -252,15 +252,17 @@ function calcSize(nH, nW, mH, mW){
  * Main entry point for the projector.
  * Orchestrates the sequence: Fetch -> Save IDB -> Load Images -> Show Projector
  */
-async function startProyector() {
+async function startProyector(ndx) {
     console.log("--- Starting Projector Sequence ---");
-
+	let val = await db.get("files", ndx);
+	anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
 	//Erase slides Store
 	db.clear("slides");
 
     try {
         // 1. Cargar datos remotos a IDB
-        await slideLoads(); 
+		//var mesg = await slideLoads(val.path,"slides");
+        await slideLoads(val.path,"slides");
         
         // 2. Cargar imágenes de IDB a memoria (Aquí es donde debería aparecer el log de Step 4)
         console.log("Step 3 complete. Moving to Step 4 (Load Images)...");
