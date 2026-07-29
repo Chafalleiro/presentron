@@ -121,65 +121,91 @@ async function askFileLoad(par,msg,st)
 }
 
 /**
- * Loads all slide images from IDB into memory.
- * Returns a Promise that resolves when all images are loaded (or failed).
+ * Loads all slide images into memory from the IDB 'slides' store.
+ * Returns a Promise that resolves when all images are loaded or failed.
  */
 function loadSlideImages() {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         console.log("Step 4: Starting image preload from IDB...");
 
-        try {
-            // 1. Obtener datos de IDB
-            const slides = await getStoreData('slides'); // Asegúrate que esta función existe y devuelve un array
+        // Opción A: Si tu librería umd.js o db_routines tiene una función para obtener todos los datos
+        // Descomenta la línea siguiente y cambia 'getAllFromStore' por el nombre real de tu función
+        // ej: dbGetAll('slides') o readStore('slides')
+        
+        // --- INICIO BLOQUE DE LECTURA DIRECTA (Seguro si no hay función helper) ---
+        const request = indexedDB.open(window.dbName || "PresentronDB", window.dbVersion || 1);
+        
+        request.onerror = (event) => {
+            console.error("Database error: ", event.target.errorCode);
+            reject(event.target.errorCode);
+        };
 
-            if (!slides || slides.length === 0) {
-                console.warn("No slides found in IDB to preload.");
-                window.slidesData = [];
-                resolve(); // Resolvemos inmediatamente si no hay datos
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const tx = db.transaction(['slides'], 'readonly');
+            const store = tx.objectStore('slides');
+            const getAllRequest = store.getAll();
+
+            getAllRequest.onsuccess = () => {
+                const slides = getAllRequest.result;
+                processSlides(slides, resolve, reject);
+            };
+
+            getAllRequest.onerror = () => {
+                console.error("Error fetching slides from IDB");
+                reject(getAllRequest.error);
+            };
+        };
+        // --- FIN BLOQUE DE LECTURA DIRECTA ---
+    });
+}
+
+/**
+ * Helper to process the retrieved slides and load images
+ */
+function processSlides(slides, resolve, reject) {
+    console.log(`Retrieved ${slides ? slides.length : 0} slides from IDB.`);
+
+    if (!slides || slides.length === 0) {
+        console.warn("No slides found in IDB to preload.");
+        window.slidesData = [];
+        // Resolvemos aunque esté vacío para no bloquear la app
+        resolve(); 
+        return;
+    }
+
+    window.slidesData = slides;
+
+    const imagePromises = slides.map((slide, index) => {
+        return new Promise((imgResolve) => {
+            if (!slide.imageSrc) {
+                imgResolve(); // Slide sin imagen, continuamos
                 return;
             }
 
-            window.slidesData = slides;
-            console.log(`Found ${slides.length} slides in IDB. Preloading images...`);
-
-            // 2. Crear promesas para cada imagen
-            const imagePromises = slides.map((slide, index) => {
-                return new Promise((imgResolve, imgReject) => {
-                    if (!slide.imageSrc) {
-                        console.warn(`Slide ${index} has no image source.`);
-                        imgResolve(); // Resolver aunque no tenga imagen
-                        return;
-                    }
-
-                    const img = new Image();
-                    
-                    img.onload = () => {
-                        // Opcional: guardar la imagen cargada en el objeto slide si es necesario
-                        // slide.loadedImg = img; 
-                        imgResolve();
-                    };
-
-                    img.onerror = (err) => {
-                        console.error(`Error loading image for slide ${index}:`, slide.imageSrc);
-                        imgResolve(); // Resolvemos igual para no bloquear todo el proceso por una imagen rota
-                    };
-
-                    // Iniciar carga
-                    img.src = slide.imageSrc;
-                });
-            });
-
-            // 3. Esperar a que TODAS las imágenes terminen
-            await Promise.all(imagePromises);
-
-            console.log("Step 5: All images preloaded successfully.");
-            resolve(); // <--- ¡ESTO es lo que faltaba o no se ejecutaba!
-
-        } catch (error) {
-            console.error("Critical error in loadSlideImages:", error);
-            reject(error);
-        }
+            const img = new Image();
+            img.onload = () => {
+                // Opcional: guardar la imagen cargada en el objeto slide si se necesita
+                // slide.imgObject = img; 
+                imgResolve();
+            };
+            img.onerror = () => {
+                console.warn(`Failed to load image for slide ${index}: ${slide.imageSrc}`);
+                imgResolve(); // Resolvemos igual para no bloquear todo el proceso por una imagen rota
+            };
+            img.src = slide.imageSrc;
+        });
     });
+
+    Promise.all(imagePromises)
+        .then(() => {
+            console.log("Step 5: All images preloaded successfully.");
+            resolve();
+        })
+        .catch((err) => {
+            console.error("Error during image preloading:", err);
+            reject(err);
+        });
 }
 
 function imageLoads(arrImg,arrSrc,cnt)
