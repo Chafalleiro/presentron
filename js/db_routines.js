@@ -336,78 +336,50 @@ async function importWin(ds)
 	
 	showModal("importData");
 }
-async function importDt(dt, m, rr) //dt = store name, m = mode, rr = working array
-{
-    console.log("store "+dt.store+" mode "+m);
-    // If rr is already provided (data from remote fetch), skip file input and write directly
-    if(rr && rr.length > 0)
-    {
-        console.log("Writing data directly from array");
-        writeMedia(m, dt, rr);
-        return;
-    }
-    // Otherwise, use file input for manual import
-    fileData = document.createElement("input");
-    fileData.setAttribute("type", "file");
-    fileData.setAttribute("accept", ".json");
-    fileData.setAttribute("name", "fileData"); // You may want to change this
-    fileData.style.visibility = "hidden";
-    document.body.appendChild(fileData);
-    console.log("Loading data");
-    fileData.addEventListener('change', function(e){y(dt,m,rr);}, false);
-    fileData.click();
-    document.body.removeChild(fileData);
-}
-
 /**
- * Validates JSON data by comparing header with expected structure.
- * Replicates the logic from function y(dt, mo, rr).
- * @param {Array} jsonData - The parsed JSON array (including header).
- * @param {Object} dt - The data structure definition (e.g., slideStruct).
- * @returns {Array|null} - Returns the data array without header if valid, null otherwise.
+ * Imports data into the specified store.
+ * @param {Array} data - The array of data items to import.
+ * @param {string} storeName - The name of the IDB store (e.g., 'slides').
+ * @param {boolean} isAutoLoad - If true, uses showFlash (non-blocking). If false, implies manual user action.
  */
-function validateAndFilterData(jsonData, dt) {
-    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
-        console.error("Invalid JSON data: empty or not an array");
-        return null;
+async function importDt(data, storeName, isAutoLoad = false) {
+    if (!data || !Array.isArray(data)) {
+        console.error("Invalid data provided for import");
+        throw new Error("Invalid data format"); // Lanzar error para detener la cadena si falla
     }
-    
-    let header = jsonData[0];
-    let cnt = 0;
-    let eqR = 0;
-    
-    console.log("Validating header:", header);
-    console.log("Expected store:", dt.store);
-    
-    let impStore = dt.store;
-    
-    // Check if store name matches
-    if (header.store !== impStore) {
-        console.error("Import error. The store declared in file is \"" + header.store + 
-                      "\" while the expected store is \"" + impStore + "\". Ignoring import.");
-        return null;
-    }
-    
-    // Compare field keys
-    let keysIn = header.keys.slice().sort();
-    let keysSt = dt.keys.slice().sort();
-    cnt = Object.keys(dt.keys).length;
-    
-    for (let i = 0; i < cnt; i++) {
-        if (keysSt[i] === keysIn[i]) {
-            eqR++;
+
+    try {
+        const tx = db.transaction([storeName], "readwrite");
+        const store = tx.objectStore(storeName);
+        
+        await store.clear(); 
+
+        for (let item of data) {
+            await store.put(item);
         }
+
+        // CRUCIAL: Esperar explícitamente a que la transacción termine
+        await tx.complete; 
+        
+        console.log(`Transaction complete for store: ${storeName}`);
+
+        if (isAutoLoad) {
+            if (typeof showFlash === 'function') {
+                showFlash("flash", `Presentation loaded: ${data.length} slides`, 0.1, 1.1);
+            }
+        }
+
+        window.dispatchEvent(new Event('db-updated'));
+        
+        return true; // Indicar éxito explícito
+
+    } catch (error) {
+        console.error("Error importing data:", error);
+        if (typeof showFlash === 'function') {
+            showFlash("flash", "Error loading data", 0.1, 1.1);
+        }
+        throw error; // Propagar el error para que slideLoads lo capture
     }
-    
-    if (eqR !== cnt) {
-        console.error("Import error. Declared fields (" + cnt + ") don't match the imported file fields (" + eqR + "). Ignoring import.");
-        return null;
-    }
-    
-    // Validation passed, remove header and return data
-    let filteredData = jsonData.slice(1);
-    console.log("Validation successful. " + filteredData.length + " records found.");
-    return filteredData;
 }
 
 function y(dt,mo,rr) {

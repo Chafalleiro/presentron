@@ -54,44 +54,29 @@ var aniframes = [];  // Hold images.
 var drtframes = [];  // Hold images.
 var dmgframes = [];  // Hold images.
 
-async function slideLoads(file, store) {
-    console.log("Slides file", file);
-    const url = file;
-    var loaded = false;
+/**
+ * Loads slides from remote JSON and saves to IDB.
+ * Does NOT load images into memory yet.
+ */
+async function slideLoads(file,store) {
+    console.log("Step 1: Fetching remote JSON...");
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
+        const response = await fetch(file); 
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const jsonData = await response.json();
+        console.log(`Step 2: JSON parsed (${jsonData.length} items). Importing to IDB...`);
+
+        // Solo importamos. importDt ya espera a que termine la transacción interna.
+        await importDt(jsonData, store, true); 
         
-        // Validate and filter data using header comparison (same logic as function y in db_routines.js)
-        const validatedData = validateAndFilterData(jsonData, slideStruct);
+        console.log("Step 3: IDB Import finished successfully.");
+        // NO llamar a loadSlideImages aquí. El caller decidirá cuándo cargar imágenes.
         
-        if (!validatedData) {
-            throw new Error("Data validation failed: Header mismatch");
-        }
-        
-        anArr = validatedData;
-        nOk = 1;
-        swUpt = true;
-        actFile = {name: file};
-        loaded = true;
-        
-        // Write data to IDB immediately after loading from remote file
-        // Pass the already-validated data directly to writeMedia
-        await writeMedia("ow", slideStruct, anArr);
-        return loaded;
+    } catch (error) {
+        console.error("Error in slideLoads:", error);
+        throw error; // Relanzar para que startProyector se entere
     }
-    catch (error) {
-        console.error(error.message);
-        await drawAsk("Datafile not found on server.<br>Would you like to load a local file?");
-        loaded = questionLoop("askFileLoad", 1, store);
-        console.log("MESG", loaded);
-        return loaded;
-    }
-    return loaded;		
 }
 
 function drawAsk(msg)
@@ -135,36 +120,92 @@ async function askFileLoad(par,msg,st)
 //	return msg;
 }
 
+/**
+ * Loads all slide images into memory from the IDB 'slides' store.
+ * Returns a Promise that resolves when all images are loaded or failed.
+ */
+function loadSlideImages() {
+    return new Promise((resolve, reject) => {
+        console.log("Step 4: Starting image preload from IDB...");
 
-//************* Load slide images helper function ****************************************
-function loadSlideImages(slideArray, callback)
-{
-        var loadedCount = 0;
-        var totalSlides = slideArray.length;
+        // Opción A: Si tu librería umd.js o db_routines tiene una función para obtener todos los datos
+        // Descomenta la línea siguiente y cambia 'getAllFromStore' por el nombre real de tu función
+        // ej: dbGetAll('slides') o readStore('slides')
         
-        if(totalSlides === 0) {
-                callback();
+        // --- INICIO BLOQUE DE LECTURA DIRECTA (Seguro si no hay función helper) ---
+        const request = indexedDB.open(window.dbName || "presentron", window.dbVersion || 1);
+        
+        request.onerror = (event) => {
+            console.error("Database error: ", event.target.errorCode);
+            reject(event.target.errorCode);
+        };
+
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const tx = db.transaction(['slides'], 'readonly');
+            const store = tx.objectStore('slides');
+            const getAllRequest = store.getAll();
+
+            getAllRequest.onsuccess = () => {
+                const slides = getAllRequest.result;
+                processSlides(slides, resolve, reject);
+            };
+
+            getAllRequest.onerror = () => {
+                console.error("Error fetching slides from IDB");
+                reject(getAllRequest.error);
+            };
+        };
+        // --- FIN BLOQUE DE LECTURA DIRECTA ---
+    });
+}
+
+/**
+ * Helper to process the retrieved slides and load images
+ */
+function processSlides(slides, resolve, reject) {
+    console.log(`Retrieved ${slides ? slides.length : 0} slides from IDB.`);
+
+    if (!slides || slides.length === 0) {
+        console.warn("No slides found in IDB to preload.");
+        window.slidesData = [];
+        // Resolvemos aunque esté vacío para no bloquear la app
+        resolve(); 
+        return;
+    }
+
+    window.slidesData = slides;
+
+    const imagePromises = slides.map((slide, index) => {
+        return new Promise((imgResolve) => {
+            if (!slide.imageSrc) {
+                imgResolve(); // Slide sin imagen, continuamos
                 return;
-        }
-        
-        for(var i = 0; i < totalSlides; i++) {
-                var img = new Image();
-                img.onload = function() {
-                        loadedCount++;
-                        if(loadedCount >= totalSlides) {
-                                console.log("All slide images loaded:", loadedCount);
-                                callback();
-                        }
-                };
-                img.onerror = function() {
-                        console.error("Failed to load slide image");
-                        loadedCount++;
-                        if(loadedCount >= totalSlides) {
-                                callback();
-                        }
-                };
-                img.src = slideArray[i]["slide"];
-        }
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                // Opcional: guardar la imagen cargada en el objeto slide si se necesita
+                // slide.imgObject = img; 
+                imgResolve();
+            };
+            img.onerror = () => {
+                console.warn(`Failed to load image for slide ${index}: ${slide.imageSrc}`);
+                imgResolve(); // Resolvemos igual para no bloquear todo el proceso por una imagen rota
+            };
+            img.src = slide.imageSrc;
+        });
+    });
+
+    Promise.all(imagePromises)
+        .then(() => {
+            console.log("Step 5: All images preloaded successfully.");
+            resolve();
+        })
+        .catch((err) => {
+            console.error("Error during image preloading:", err);
+            reject(err);
+        });
 }
 
 function imageLoads(arrImg,arrSrc,cnt)
@@ -207,77 +248,61 @@ function calcSize(nH, nW, mH, mW){
 	else{console.log("No image")}
 }
 //************* Start Proyector ****************************************
-async function startProyector(ndx)
-{
-//Get file data
-let val = await db.get("files", ndx);
-let waitForArr;
-nAns = 0;
-nOk = 0;
-nCan = 0;
-swUpt = false;
-anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
-//Erase slides Store
-await db.clear("slides");
-//Load slides File from files
-var mesg = await slideLoads(val.path,"slides");
-console.log("mesg" , mesg);
-cLoad = false; // Don't set to true yet - wait for images to load
-if(nOk == 1)
-{
-// Wait for writeMedia to complete (swUpt will be set to true)
-waitForArr = setInterval(function () {//Wait for file to load
-if (swUpt == true){
-clearInterval(waitForArr);
-waitForArr = null;
-// Now read the slides from IDB after they've been written
-db.getAll("slides").then(function(datasets) {
-anArr = structuredClone(datasets);
-console.log("Slides loaded from IDB:", anArr.length);
-slIndexes = null;
-slIndexes = structuredClone(emptyArr);
-for(const item of anArr)
-{
-// Iterate through each field in the fields object and create an array of db indexes
-slIndexes.push(item["keySl"]);
-}
-console.log("slIndexes",slIndexes);
-val.path = actFile.name;
-img_count = slIndexes.length;
-let request = db.put("files", val); //Update the file name
+/**
+ * Main entry point for the projector.
+ * Orchestrates the sequence: Fetch -> Save IDB -> Load Images -> Show Projector
+ */
+async function startProyector(ndx) {
+    console.log("--- Starting Projector Sequence ---");
+	let val = await db.get("files", ndx);
+	anArr = null;//Must remember to do this more often, I keep cluttering memory and timers.
+	//Erase slides Store
+	db.clear("slides");
 
-// Load all slide images before showing the projector
-loadSlideImages(anArr, function() {
-// All images loaded successfully
-cLoad = true;
-//Show the proyector screen.
-document.getElementById("controls").style.visibility = "visible";
-document.getElementById("slideText").style.visibility = "visible";
-document.getElementById("controls").style.opacity = "100%";
-document.getElementById("slideText").style.opacity = "100%";
-sw_on = true;
-document.getElementById("projector").style.visibility = "visible";
-document.getElementById("projector").style.opacity = "100%";
-sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
-sliFan.autoplay = true;
-sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
-sliTrack.loop = true;
-sliTrack.autoplay = true;
-const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
-const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,'snd/ventiladorproyectorvideo.mp3');}, 150);
-sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
-sliEffects.autoplay = false;
-if(mesg != true)
-{
-showModal('alertW');
-showModal('importData');
-}
-showSlide(0);
-});
-});
-}
-}, 100);
-}
+    try {
+        // 1. Cargar datos remotos a IDB
+		//var mesg = await slideLoads(val.path,"slides");
+        await slideLoads(val.path,"slides");
+        
+        // 2. Cargar imágenes de IDB a memoria (Aquí es donde debería aparecer el log de Step 4)
+        console.log("Step 3 complete. Moving to Step 4 (Load Images)...");
+        await loadSlideImages(); 
+        
+        console.log("Step 4 complete. Initializing Projector UI...");
+        
+        //Show the proyector screen.
+        document.getElementById("controls").style.visibility = "visible";
+        document.getElementById("slideText").style.visibility = "visible";
+        document.getElementById("controls").style.opacity = "100%";
+        document.getElementById("slideText").style.opacity = "100%";
+        //document.getElementById("slideText").innerHTML  = "LOADING SLIDES... " + ndx+"<br>file "+ val.path+"<br>slIndexes " + slIndexes + "<br>actFile.name " + actFile.name;
+        sw_on = true;
+	
+        document.getElementById("projector").style.visibility = "visible";
+        document.getElementById("projector").style.opacity = "100%";
+        
+		sliFan.setAttribute("src","snd/encenderptoyectorvideo.mp3");
+        sliFan.autoplay = true;
+	
+        sliTrack.setAttribute("src","snd/meterdiaposcaja.mp3");
+        sliTrack.loop = true;
+        sliTrack.autoplay = true;
+
+        const myTimeout = setTimeout(function (){stopLoadingSound(sliTrack);}, 5000);
+        const fanTimeout = setTimeout(function (){stopLoadingSoundAndStartOtherTrack(sliFan,"snd/ventiladorproyectorvideo.mp3");}, 150);
+        sliEffects.setAttribute("src","snd/cambioDiapo.mp3");
+        sliEffects.autoplay = false;
+		
+		showSlide(0);
+				
+        console.log("--- Projector Ready ---");
+
+    } catch (error) {
+        console.error("Fatal error starting projector:", error);
+        if (typeof showFlash === 'function') {
+            showFlash("flash", "Error starting projector", 0.1, 1.1);
+        }
+    }
 }
 
 //************* Sound helpers ****************************************
