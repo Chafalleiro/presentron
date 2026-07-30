@@ -271,6 +271,7 @@ if(mesg != true)
 {
 showModal('alertW');
 showModal('importData');
+document.body.style.pointerEvents = "auto";	
 }
 showSlide(0);
 });
