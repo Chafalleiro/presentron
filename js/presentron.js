@@ -309,43 +309,54 @@ function showSlide(sli)
 function reposition()
 {
 	console.log("reposition()");
-	if (sw_on)
-	{
+	if (!sw_on) return;
+
 	prScrn.height = Math.trunc(window.innerHeight * 0.95); //Screen proyector sizes
 	prScrn.width = Math.trunc(window.innerWidth * 0.75);
 	scrnHRatio = prScrn.height / 900;  //Screen proyector scale
-	const imgAct = document.createElement('img');
+
+	// Get image data directly from array (already loaded in memory/IDB)
+	const slideData = anArr[sliNdx]["slide"];
 	
-	imgAct.src = anArr[sliNdx]["slide"];
-	sldAct.style.backgroundImage = "url('"+imgAct.src+"')";  //Load slide image
+	// Create a temporary image object only to calculate dimensions
+	const imgCalc = new Image();
+	imgCalc.src = slideData;
+	
+	// Use natural dimensions if available, otherwise fallback to default calculation
+	const natW = imgCalc.naturalWidth || 1024;
+	const natH = imgCalc.naturalHeight || 768;
+	
+	// Set background image immediately
+	sldAct.style.backgroundImage = "url('" + slideData + "')";
 	sldAct.style.visibility = "visible";
 
 	//Slides sizes and positions
 	sldAct.style.height = "90vh";
-	sldAct.style.width = "-100%";
 	sldAct.style.maxWidth = "60%";
-	sldAct.style.width = calcSize(imgAct.naturalHeight,imgAct.naturalWidth, prScrn.height, prScrn.width).calcW+"px";
-	sldAct.style.top = Math.trunc((prScrn.height - calcSize(imgAct.naturalHeight,imgAct.naturalWidth, prScrn.height, prScrn.width).calcH)/2);
-	sldAct.style.left = Math.trunc((prScrn.width - calcSize(imgAct.naturalHeight,imgAct.naturalWidth, prScrn.height, prScrn.width).calcW)/2);
-	//sldAct.style.left = "10%";
-	document.getElementById("rectA").setAttribute("height",sldAct.style.height); //Clipping path sizing
+	
+	// Calculate scaled dimensions
+	const calcDims = calcSize(natH, natW, prScrn.height, prScrn.width);
+	sldAct.style.width = calcDims.calcW + "px";
+	sldAct.style.top = Math.trunc((prScrn.height - calcDims.calcH)/2) + "px";
+	sldAct.style.left = Math.trunc((prScrn.width - calcDims.calcW)/2) + "px";
+	
+	document.getElementById("rectA").setAttribute("height", sldAct.style.height); //Clipping path sizing
 	
 	var clip_1 = document.getElementById("clippingArea");
-	clip_1.setCurrentTime(0)
+	clip_1.setCurrentTime(0);
 
-	var w = sldAct.style.width;
 	var mov_1 = document.getElementById("xClip");  //Clipping path positioning animation
 	mov_1.setAttribute("dur","0.3s");
 	mov_1.setAttribute("begin","0s");
 	mov_1.setAttribute("values","0;0;");
 	mov_1.setAttribute("repeatCount","1");
 
-	w = "0;0;5;0;100;" + parseInt(sldAct.style.width) + ";"
+	var w = "0;0;5;0;100;" + parseInt(sldAct.style.width) + ";";
 
 	var mov_2 = document.getElementById("wClip");
 	mov_2.setAttribute("dur","0.3s");
 	mov_2.setAttribute("begin","0s");
-	mov_2.setAttribute("values",w);
+	mov_2.setAttribute("values", w);
 	mov_2.setAttribute("repeatCount","1"); 
 
 	document.getElementById("opA").setAttribute("begin","0s");  //Blurring and opacity svg animations
@@ -362,7 +373,6 @@ function reposition()
 	animSVG.setCurrentTime(0); //Start the animation
 
 	rndRes();
-	}
 }
 //************* Move out the slide ****************************************
 async function moveOut(sender)
