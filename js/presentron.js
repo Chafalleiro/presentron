@@ -132,56 +132,77 @@ async function askFileLoad(par, msg, st) {
 }
 
 //************* Load slide images helper function ****************************************
-async function loadSlideImages() {
+/**
+ * Precarga todas las imágenes desde IDB en memoria para evitar parpadeos.
+ * Debe llamarse después de que slideLoads haya terminado de escribir en IDB.
+ */
+function loadSlideImages() {
     return new Promise((resolve, reject) => {
         console.log("Step 4: Starting image preload from IDB...");
 
+        // 1. Abrir transacción de solo lectura
         const tx = db.transaction(['slides'], 'readonly');
         const store = tx.objectStore('slides');
         const request = store.getAll();
 
-        request.onsuccess = async() => {
+        request.onsuccess = () => {
             const slides = request.result;
-
+            
             if (!slides || slides.length === 0) {
-                console.warn("No slides found in IDB.");
+                console.warn("No slides found in IDB to preload.");
                 window.slidesData = [];
-                resolve();
+                resolve(); // Resolver inmediatamente si no hay datos
                 return;
             }
 
-            window.slidesData = slides; // Guardamos referencia a los datos completos
-            window.imageCache.clear(); // Limpiamos caché anterior
+            window.slidesData = slides;
+            console.log(`Step 4b: Found ${slides.length} slides. Preloading images...`);
 
-            const loadPromises = slides.map((slide, index) => {
+            // 2. Crear promesas para cada imagen
+            const imagePromises = slides.map((slide, index) => {
                 return new Promise((imgResolve) => {
-                    if (!slide.slide) { // Tu campo base64 se llama 'slide'
-                        imgResolve();
+                    // Verificar que existe el campo 'slide' (donde guardamos el base64)
+                    const src = slide.slide; 
+                    
+                    if (!src) {
+                        console.warn(`Slide ${index} has no image data.`);
+                        imgResolve(); // Resolver aunque esté vacía para no bloquear
                         return;
                     }
 
                     const img = new Image();
+                    
+                    // Cuando carga correctamente
                     img.onload = () => {
-                        // Guardamos la imagen cargada en el caché usando el índice o ID
-                        window.imageCache.set(index, img);
+                        // Opcional: Guardar la imagen cargada en el objeto para acceso rápido
+                        // slide.loadedImg = img; 
                         imgResolve();
                     };
-                    img.onerror = (e) => {
-                        console.error(`Failed to load slide ${index}`, e);
-                        imgResolve(); // Resolvemos igual para no bloquear todo el lote
+
+                    // Cuando falla (importante: resolver igual para no bloquear Promise.all)
+                    img.onerror = () => {
+                        console.error(`Error loading image for slide ${index}. Source length: ${src.length}`);
+                        imgResolve(); 
                     };
-                    img.src = slide.slide; // Asignamos el base64
+
+                    // Iniciar carga
+                    img.src = src;
                 });
             });
 
-            await Promise.all(loadPromises);
-            console.log(`Step 5: All ${slides.length} images preloaded and cached.`);
-            resolve();
+            // 3. Esperar a que TODAS las imágenes terminen (o fallen suavemente)
+            Promise.all(imagePromises).then(() => {
+                console.log("Step 5: All images preloaded successfully.");
+                resolve(); // ¡Aquí desbloqueamos startProyector!
+            }).catch(err => {
+                console.error("Error in Promise.all:", err);
+                resolve(); // Resolver igualmente para no dejar colgada la app
+            });
         };
 
-        request.onerror = (e) => {
-            console.error("Error reading slides from IDB", e);
-            reject(e);
+        request.onerror = (err) => {
+            console.error("Error reading from IDB in loadSlideImages:", err);
+            reject(err);
         };
     });
 }
