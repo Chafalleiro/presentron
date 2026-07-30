@@ -302,8 +302,11 @@ function reposition() {
 		const imgAct = new Image();
 		const imgSrc = anArr[sliNdx]["slide"]; // Tu campo base64
 //        const imgAct = document.createElement('img');
-console.log('IMAGE' + sliNdx);
+console.log('IMAGE');
+console.log(sliNdx);
+console.log('src');
 console.log(imgSrc);
+console.log('anarr');
 console.log(anArr);
         imgAct.src = anArr[sliNdx]["slide"];
         sldAct.style.backgroundImage = "url('" + imgAct.src + "')"; //Load slide image
