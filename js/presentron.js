@@ -301,7 +301,7 @@ function reposition() {
         scrnHRatio = prScrn.height / 900; //Screen proyector scale
 		const imgAct = new Image();
 		const imgSrc = anArr[sliNdx]["slide"]; // Tu campo base64
-        const imgAct = document.createElement('img');
+//        const imgAct = document.createElement('img');
 console.log('IMAGE');
 console.log(imgSrc);
         imgAct.src = anArr[sliNdx]["slide"];
