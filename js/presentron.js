@@ -141,9 +141,9 @@ function loadSlideImages() {
         console.log("Step 4: Starting image preload from IDB...");
 
         // 1. Abrir transacción de solo lectura
-        const tx = db.transaction(['slides'], 'readonly');
-        const store = tx.objectStore('slides');
-        const request = store.getAll();
+        const tx = await db.transaction(['slides'], 'readonly');
+        const store = await tx.objectStore('slides');
+        const request = await store.getAll();
 
         request.onsuccess = () => {
             const slides = request.result;
