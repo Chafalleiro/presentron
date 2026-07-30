@@ -390,9 +390,8 @@ async function moveOut(sender) {
 //************* Move in the slide ****************************************
 function transEnd() {
     if (where == "ff") {
-
         sliNdx = (sliNdx < (slIndexes.length - 1)) ? sliNdx + 1 : 0;
-        anArr
+        //anArr
     } else {
         sliNdx = (sliNdx > 0) ? sliNdx - 1 : slIndexes.length - 1;
     }
