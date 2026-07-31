@@ -42,10 +42,11 @@
 			<ul id="contolbtn" class="menubar">
 				<!-- Menu visibility  -->
 				<li class="bgbright" style="display: block; z-index:10;" id="showmenu">
-				<a href="#" id ="expand"
+				<a class="cellTit" cellTithref="#" id ="expand"
 				   onclick="document.getElementById('ulist').style.display  = 'block';
 							document.getElementById('expand').style.display  = 'none';
-							document.getElementById('shrink').style.display  = 'block';">🗗</a>
+							document.getElementById('shrink').style.display  = 'block';">🗗
+							<span class="tooltiptext">Expand Menu.</span></a>
 				</li>
 				<li class="bgbright">
 					<a href="#" id ="shrink" 
@@ -132,6 +133,8 @@
 			<span id="flashTxt"></span>
 		</div>
 		</div>
+		<span id="slHelp" class="textbutton" onclick="startProyector(-1);">[Slides help]</span>
+		<span id="cfHelp" class="textbutton" onclick="startProyector(-2);">[Configuration help]</span>
 	<!-- TITLE  -->
 	<!-- CONTENT  -->
 
@@ -435,7 +438,6 @@
 		<span class="textbutton" onclick="showModal('crtControls');modConfig(true);return false;"><br><br>[&nbsp;OK&nbsp;]<br><br></span>
 		<span class="textbutton" onclick="showModal('crtControls');modConfig(false);return false;"><br><br>[&nbsp;Cancel&nbsp;]<br><br></span>
 </div>
-
 
 <!-- SVG to control barrel and screen color -->
 <div style="display: none; position: absolute; z-index:0;">

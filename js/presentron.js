@@ -207,8 +207,21 @@ async function startProyector(ndx) {
     anArr = null; //Must remember to do this more often, I keep cluttering memory and timers.
     //Erase slides Store
     await db.clear("slides");
+	//Load slides from special help files. Make cases for each one
+	var mesg;
+	if (ndx < 0)
+	{
+		switch (ndx) {
+			case -1:
+				var mesg = await slideLoads("slides_data.json", "slides");
+				break;
+			case -2:
+				var mesg = await slideLoads("slides/config_help.json", "slides");
+				break;
+		}
+	}
     //Load slides File from files
-    var mesg = await slideLoads(val.path, "slides");
+	else {mesg = await slideLoads(val.path, "slides");}
     console.log("mesg", mesg);
     cLoad = false; // Don't set to true yet - wait for images to load
     if (nOk == 1) {
