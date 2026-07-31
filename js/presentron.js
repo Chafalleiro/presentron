@@ -213,10 +213,10 @@ async function startProyector(ndx) {
 	{
 		switch (ndx) {
 			case -1:
-				var mesg = await slideLoads("slides_data.json", "slides");
+				var mesg = await slideLoads("quick_slides.json", "slides");
 				break;
 			case -2:
-				var mesg = await slideLoads("slides/config_help.json", "slides");
+				var mesg = await slideLoads("config_help.json", "slides");
 				break;
 		}
 	}
