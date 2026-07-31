@@ -805,7 +805,8 @@ async function writeMedia(mode, dstore, arrayUsed) //Write to database.
     let objectStore = tx.objectStore(dstore.store);
     var datasets = await objectStore.getAll(); //Refresh the arrays
     anArr = structuredClone(datasets);
-    showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
+    //showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
+	showFlash("flash", "DataStore '" + anStore + "' is Empty", 0.05, 1.1);	
     swUpt = true;
     console.log("anArr wrotemedia",anArr);
 }
