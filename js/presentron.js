@@ -305,7 +305,7 @@ function reposition() {
     const tempImg = new Image();
     const imgSrc = anArr[sliNdx]["slide"]; // Tu campo base64
 
-    imgAct.onload = function () {
+    tempImg.onload = function () {
         imgAct.src = imgSrc;
         sldAct.style.backgroundImage = "url('" + imgSrc + "')"; //Load slide image
         sldAct.style.visibility = "visible";
@@ -353,14 +353,14 @@ function reposition() {
 
         rndRes();
     };
-    imgAct.onerror = function () {
+    tempImg.onerror = function () {
         console.error("Error loading slide image at index:", sliNdx);
         sldAct.style.visibility = "visible"; // Mostrar al menos el contenedor/texto
         // Podrías poner una imagen de error por defecto aquí
     };
 
     // Iniciar carga
-    imgAct.src = imgSrc;
+    tempImg.src = imgSrc;
 }
 //************* Move out the slide ****************************************
 async function moveOut(sender) {
