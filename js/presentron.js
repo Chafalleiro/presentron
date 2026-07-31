@@ -295,78 +295,74 @@ function showSlide(sli) {
 //************* Resize and reposition ****************************************
 function reposition() {
     console.log("reposition()");
-    if (sw_on) {
-        prScrn.height = Math.trunc(window.innerHeight * 0.95); //Screen proyector sizes
-        prScrn.width = Math.trunc(window.innerWidth * 0.75);
-        scrnHRatio = prScrn.height / 900; //Screen proyector scale
-        const imgAct = new Image();
-        const tempImg = new Image();
-        const imgSrc = anArr[sliNdx]["slide"]; // Tu campo base64
-        //        const imgAct = document.createElement('img');
-        console.log('IMAGE');
-        console.log(sliNdx);
-        console.log('src');
-        console.log(imgSrc);
-        console.log('anarr');
-        console.log(anArr);
-        tempImg.onload = function () {
-            imgAct.src = imgSrc;
-            //sldAct.style.backgroundImage = "url('" + imgAct.src + "')"; //Load slide image
-			sldAct.style.backgroundImage = "url('" + imgSrc + "')"; //Load slide image
-            sldAct.style.visibility = "visible";
+    if (!sw_on)
+        return;
+    prScrn.height = Math.trunc(window.innerHeight * 0.95); //Screen proyector sizes
+    prScrn.width = Math.trunc(window.innerWidth * 0.75);
+    scrnHRatio = prScrn.height / 900; //Screen proyector scale
 
-            //Slides sizes and positions
-            sldAct.style.height = "90vh";
-            sldAct.style.width = "-100%";
-            sldAct.style.maxWidth = "60%";
-            sldAct.style.width = calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcW + "px";
-            sldAct.style.top = Math.trunc((prScrn.height - calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcH) / 2);
-            sldAct.style.left = Math.trunc((prScrn.width - calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcW) / 2);
-            //sldAct.style.left = "10%";
-            document.getElementById("rectA").setAttribute("height", sldAct.style.height); //Clipping path sizing
+    const imgAct = new Image();
+    const tempImg = new Image();
+    const imgSrc = anArr[sliNdx]["slide"]; // Tu campo base64
 
-            var clip_1 = document.getElementById("clippingArea");
-            clip_1.setCurrentTime(0)
+    imgAct.onload = function () {
+        imgAct.src = imgSrc;
 
-            var w = sldAct.style.width;
-            var mov_1 = document.getElementById("xClip"); //Clipping path positioning animation
-            mov_1.setAttribute("dur", "0.3s");
-            mov_1.setAttribute("begin", "0s");
-            mov_1.setAttribute("values", "0;0;");
-            mov_1.setAttribute("repeatCount", "1");
+        sldAct.style.backgroundImage = "url('" + imgSrc + "')"; //Load slide image
+        sldAct.style.visibility = "visible";
 
-            w = "0;0;5;0;100;" + parseInt(sldAct.style.width) + ";"
+        //Slides sizes and positions
+        sldAct.style.height = "90vh";
+        sldAct.style.width = "-100%";
+        sldAct.style.maxWidth = "60%";
+        sldAct.style.width = calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcW + "px";
+        sldAct.style.top = Math.trunc((prScrn.height - calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcH) / 2);
+        sldAct.style.left = Math.trunc((prScrn.width - calcSize(imgAct.naturalHeight, imgAct.naturalWidth, prScrn.height, prScrn.width).calcW) / 2);
+        //sldAct.style.left = "10%";
+        document.getElementById("rectA").setAttribute("height", sldAct.style.height); //Clipping path sizing
 
-                var mov_2 = document.getElementById("wClip");
-            mov_2.setAttribute("dur", "0.3s");
-            mov_2.setAttribute("begin", "0s");
-            mov_2.setAttribute("values", w);
-            mov_2.setAttribute("repeatCount", "1");
+        var clip_1 = document.getElementById("clippingArea");
+        clip_1.setCurrentTime(0)
 
-            document.getElementById("opA").setAttribute("begin", "0s"); //Blurring and opacity svg animations
-            document.getElementById("opA").setAttribute("repeatCount", "1");
-            document.getElementById("opA").setAttribute("dur", "0.55s");
-            document.getElementById("opA").setAttribute("values", "0 0;0 0.5; 0 0.5;0 0.8;");
+        var w = sldAct.style.width;
+        var mov_1 = document.getElementById("xClip"); //Clipping path positioning animation
+        mov_1.setAttribute("dur", "0.3s");
+        mov_1.setAttribute("begin", "0s");
+        mov_1.setAttribute("values", "0;0;");
+        mov_1.setAttribute("repeatCount", "1");
 
-            document.getElementById("blA").setAttribute("begin", "0s");
-            document.getElementById("blA").setAttribute("repeatCount", "1");
-            document.getElementById("blA").setAttribute("dur", "0.75s");
-            document.getElementById("blA").setAttribute("values", "15;7;5;20;0;");
+        w = "0;0;5;0;100;" + parseInt(sldAct.style.width) + ";"
 
-            var animSVG = document.getElementById("combini");
-            animSVG.setCurrentTime(0); //Start the animation
+            var mov_2 = document.getElementById("wClip");
+        mov_2.setAttribute("dur", "0.3s");
+        mov_2.setAttribute("begin", "0s");
+        mov_2.setAttribute("values", w);
+        mov_2.setAttribute("repeatCount", "1");
 
-            rndRes();
-        };
-        tempImg.onerror = function () {
-            console.error("Error loading slide image at index:", sliNdx);
-            sldAct.style.visibility = "visible"; // Mostrar al menos el contenedor/texto
-            // Podrías poner una imagen de error por defecto aquí
-        };
+        document.getElementById("opA").setAttribute("begin", "0s"); //Blurring and opacity svg animations
+        document.getElementById("opA").setAttribute("repeatCount", "1");
+        document.getElementById("opA").setAttribute("dur", "0.55s");
+        document.getElementById("opA").setAttribute("values", "0 0;0 0.5; 0 0.5;0 0.8;");
 
-        // Iniciar carga
-        tempImg.src = imgSrc;
+        document.getElementById("blA").setAttribute("begin", "0s");
+        document.getElementById("blA").setAttribute("repeatCount", "1");
+        document.getElementById("blA").setAttribute("dur", "0.75s");
+        document.getElementById("blA").setAttribute("values", "15;7;5;20;0;");
+
+        var animSVG = document.getElementById("combini");
+        animSVG.setCurrentTime(0); //Start the animation
+
+        rndRes();
     };
+    imgAct.onerror = function () {
+        console.error("Error loading slide image at index:", sliNdx);
+        sldAct.style.visibility = "visible"; // Mostrar al menos el contenedor/texto
+        // Podrías poner una imagen de error por defecto aquí
+    };
+
+    // Iniciar carga
+    imgAct.src = imgSrc;
+};
 }
 //************* Move out the slide ****************************************
 async function moveOut(sender) {
