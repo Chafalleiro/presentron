@@ -28,8 +28,7 @@ arrsBarrels = {
 					"square": ["scale","mx","my","mw","mh","cw","ch"],
 					"tall": ["scale","mx","my","mw","mh","cw","ch"],
 					};
-					
-					
+
 const confStruct = {"store": "configs","keys": ["keyCo","color","brightness","contrast","barrel",arrsBarrels,"txtShdw","scanSpd"]}; //Fields
 const confScr = [] // Configuration is a special case, having two different screens.
 

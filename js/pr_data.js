@@ -45,8 +45,7 @@ async function modConfig(action)
 		//CRT skew and position.
 		confArr.barrel  = document.getElementById('brrlChck').checked; //Write the HTML CRT barrel check element and apply conf.
 		confArr.txtShdw = document.getElementById('txtSdhwChk').checked; //Write the HTML CRT txtShdw check element and apply conf.
-		//actConf.scanSpd = document.getElementById('slider-scan').value;
-		confArr.scanSpd = document.getElementById('slider-scan').value;		
+		confArr.scanSpd = document.getElementById('slider-scan').value;
 		
 		confArr.arrsBarrels[actRatio].scale  = document.getElementById('slider-x').value;
 		console.log("confArr.arrsBarrels[actRatio].scale "+ confArr.arrsBarrels[actRatio].scale);
