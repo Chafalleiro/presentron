@@ -361,7 +361,6 @@ function reposition() {
 
     // Iniciar carga
     imgAct.src = imgSrc;
-};
 }
 //************* Move out the slide ****************************************
 async function moveOut(sender) {
