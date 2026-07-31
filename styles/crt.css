@@ -201,7 +201,7 @@ a{
     background: linear-gradient(
         0deg,
         rgba(0, 0, 0, 0) 0%,
-        rgba(255, 255, 255, 0.2) 10%,
+        rgba(255, 255, 255, 0.5) 10%,
         rgba(0, 0, 0, 0.1) 100%
     );
     opacity: 0.1;
@@ -223,7 +223,7 @@ a{
     opacity: 0.1;
     position: absolute;
     bottom: 100%;
-    animation: scanline 4s linear infinite;
+    animation: scanline 1s linear infinite;
     pointer-events: none;	
 }
 @keyframes scanline {
@@ -474,7 +474,8 @@ th:not([scope=row]) {
 	font-size:1em;
 	font-weight:normal;
 	text-shadow: 0 0 5px #707070;
-	animation: textShadow 0.15s infinite;
+	/* animation: textShadow 0.15s infinite;*/
+
 
   /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
   opacity: 0;
@@ -577,7 +578,7 @@ table.sortable tbody tfoot tr:nth-child(2n+1) td {
 	font-size:1em;
 	font-weight:normal;
 	text-shadow: 0 0 5px #707070;
-	animation: textShadow 0.15s infinite;
+	/* animation: textShadow 0.15s infinite;*/
   /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
   opacity: 0;
   transition: opacity 1s;
@@ -614,7 +615,7 @@ table.sortable tbody tfoot tr:nth-child(2n+1) td {
 	font-size:1em;
 	font-weight:normal;
 	text-shadow: 0 0 5px #707070;
-	animation: textShadow 0.15s infinite;
+	/* animation: textShadow 0.15s infinite;*/
   /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
   opacity: 0;
   transition: opacity 1s;

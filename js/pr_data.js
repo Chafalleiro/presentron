@@ -44,6 +44,10 @@ async function modConfig(action)
 		console.log("Storing new config.");
 		//CRT skew and position.
 		confArr.barrel  = document.getElementById('brrlChck').checked; //Write the HTML CRT barrel check element and apply conf.
+		confArr.txtShdw = document.getElementById('txtSdhwChk').checked; //Write the HTML CRT txtShdw check element and apply conf.
+		//actConf.scanSpd = document.getElementById('slider-scan').value;
+		confArr.scanSpd = document.getElementById('slider-scan').value;		
+		
 		confArr.arrsBarrels[actRatio].scale  = document.getElementById('slider-x').value;
 		console.log("confArr.arrsBarrels[actRatio].scale "+ confArr.arrsBarrels[actRatio].scale);
 		confArr.arrsBarrels[actRatio].mx = document.getElementById('slider-mx').value;
@@ -64,6 +68,9 @@ async function modConfig(action)
 		confArr = confArrAnt;
 		//CRT skew and position.
 		document.getElementById('brrlChck').checked = confArrAnt.barrel; //Write the HTML CRT barrel check element and apply conf.
+		document.getElementById('txtSdhwChk').checked = confArrAnt.txtShdw; //Write the HTML CRT txtShdw check element and apply conf.
+		document.getElementById('slider-scan').value = confArrAnt.scanSpd;
+		
 		document.getElementById('slider-x').value = confArrAnt.arrsBarrels[actRatio].scale;
 		document.getElementById('slider-mx').value = confArrAnt.arrsBarrels[actRatio].mx;
 		document.getElementById('slider-my').value = confArrAnt.arrsBarrels[actRatio].my;
@@ -78,6 +85,9 @@ async function modConfig(action)
 
 		//CRT skew and position.
 		barrelCheck('content', document.getElementById('brrlChck'));		
+		txtShadow('content', document.getElementById('txtSdhwChk'));
+		scanSpeed(document.getElementById('slider-scan'), 'speed');
+		
 		moveSlider(document.getElementById('slider-x'), 'scale');
 		moveSMT(document.getElementById('slider-mx'), 'x');
 		moveSMT(document.getElementById('slider-my'), 'y');

@@ -13,7 +13,7 @@ let arrsBarrels = {"wide": {scale:95,mx:-0.3, my:-1.11,mw:1.65,mh:2.9,cw:2537,ch
 				"square": {scale:100,mx:-0.3, my:-0.9,mw:1.5,mh:2.5,cw:2019,ch:480},
 				"tall": {scale:50,mx:-0.23, my:-0.83,mw:1.65,mh:2.5,cw:803,ch:2471}}
 let actConf = {keyCo: 1, color: 'greenC', brightness: 1, contrast: 1,						//Screen color
-				barrel: true, "arrsBarrels": arrsBarrels};
+				barrel: true, "arrsBarrels": arrsBarrels, txtShdw: false, scanSpd: 10};
 let actRatio = "wide";
 let antRatio = "wide";
 document.getElementById("label_ratio").innerHTML = "<br><br>Aspect ratio: " + actRatio;
@@ -25,6 +25,12 @@ function barrelCheck(ele,wich)
 	else {document.getElementById(ele).style.filter = "url(#contrast) url(#brightness) url(#colorfill)";}
 }
 
+function txtShadow(ele,wich)
+{
+	//console.log("for " + document.getElementById(ele).id + " the filter " + wich.id + " is now " + wich.checked);
+	if (wich.checked){document.getElementById(ele).style.animationIterationCount = "infinite";}
+	else {document.getElementById(ele).style.animationIterationCount = "0";}
+}
 
 // observe window resize
 window.addEventListener('resize', resizeHandler);
@@ -58,6 +64,12 @@ function getRndInteger(min, max)
 {//Shamelesly from https://www.w3schools.com/js/tryit.asp?filename=tryjs_random_function2
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
+
+var scanSpeed = function(slider, direction){
+	var val = slider.value + "s";
+//	console.log("val " + val);
+	document.getElementById("aScanline").style.animationDuration = val;
+};
 
 var moveSlider = function(slider, direction){
 	var value = slider.value;
@@ -115,6 +127,13 @@ function chngConf(res){
 	console.log("Setting :" + res + "configs");
 		document.getElementById('brrlChck').checked = actConf.barrel; //Write the HTML CRT barrel check element and apply conf.
 		barrelCheck('content', document.getElementById('brrlChck'));
+
+		document.getElementById('txtSdhwChk').checked = actConf.txtShdw; //Write the HTML CRT txtShdw check element and apply conf.
+		txtShadow('content', document.getElementById('txtSdhwChk'));
+
+		document.getElementById('slider-scan').value = actConf.scanSpd; //Write the HTML CRT txtShdw check element and apply conf.
+		scanSpeed(document.getElementById('slider-scan'), 'speed');
+		
 		//CRT skew and position.
 		document.getElementById('slider-x').value = actConf.scale;
 		moveSlider(document.getElementById('slider-x'), 'scale');

@@ -30,7 +30,7 @@ arrsBarrels = {
 					};
 					
 					
-const confStruct = {"store": "configs","keys": ["keyCo","color","brightness","contrast","barrel",arrsBarrels]}; //Fields
+const confStruct = {"store": "configs","keys": ["keyCo","color","brightness","contrast","barrel",arrsBarrels,"txtShdw","scanSpd"]}; //Fields
 const confScr = [] // Configuration is a special case, having two different screens.
 
 var fileConf;
@@ -40,7 +40,7 @@ arrsBarrels = {"wide": {scale:95,mx:-0.3, my:-1.11,mw:1.65,mh:2.9,cw:2537,ch:314
 				"square": {scale:100,mx:-0.3, my:-0.9,mw:1.5,mh:2.5,cw:2019,ch:480},
 				"tall": {scale:50,mx:-0.23, my:-0.83,mw:1.65,mh:2.5,cw:803,ch:2471}}
 let confArr =  {keyCo: 1, color: 'greenC', brightness: 1, contrast: 1,						//Screen color
-				barrel: true, "arrsBarrels": arrsBarrels};	//CRT geometry
+				barrel: true, "arrsBarrels": arrsBarrels, txtShdw: false, scanSpd: 10};	//CRT geometry
 let confArrAnt = confArr;
 
 var confData = {"store":"configs", "indexes":confNdx, "struct":confStruct, "screen": confScr}; //This object contains the structure of the configuration datasets and display fields
@@ -94,6 +94,13 @@ async function db_init(db_used) //Databases
 		let actConf = await db.get('configs',1);
 		document.getElementById('brrlChck').checked = actConf.barrel; //Write the HTML CRT barrel check element and apply conf.
 		barrelCheck('content', document.getElementById('brrlChck'));
+		
+		document.getElementById('txtSdhwChk').checked = actConf.txtShdw; //Write the HTML CRT txtShdw check element and apply conf.
+		txtShadow('content', document.getElementById('txtSdhwChk'));
+		
+		document.getElementById('slider-scan').value = actConf.scanSpd; //Write the HTML CRT txtShdw check element and apply conf.
+		scanSpeed(document.getElementById('slider-scan'), 'speed');
+		
 		//CRT skew and position.
 		document.getElementById('slider-x').value = actConf.arrsBarrels[actRatio].scale;
 		moveSlider(document.getElementById('slider-x'), 'scale');
@@ -128,6 +135,13 @@ async function db_init(db_used) //Databases
 		let actConf = await db.add('configs', confArr);
 		document.getElementById('brrlChck').checked = true; //Write the HTML CRT barrel check element and apply conf.
 		barrelCheck('content', document.getElementById('brrlChck'));
+
+		document.getElementById('txtSdhwChk').checked = false; //Write the HTML CRT txtShdw check element and apply conf.
+		txtShadow('content', document.getElementById('txtSdhwChk'));
+		
+		document.getElementById('slider-scan').value = 10; //Write the HTML CRT txtShdw check element and apply conf.
+		scanSpeed(document.getElementById('slider-scan'), 'speed');
+		
 		//CRT skew and position.
 		document.getElementById('slider-x').value = 100;
 		moveSlider(document.getElementById('slider-x'), 'scale');
@@ -806,7 +820,7 @@ async function writeMedia(mode, dstore, arrayUsed) //Write to database.
     var datasets = await objectStore.getAll(); //Refresh the arrays
     anArr = structuredClone(datasets);
     //showAlert("alertW", "DataStore '" + dstore.store + "' written.", "normal");
-	showFlash("flash", "DataStore '" + dstore.store + "' is Empty", 0.2, 1.1);	
+	showFlash("flash", "DataStore '" + dstore.store + "' is Empty", 0.1, 1.1);	
     swUpt = true;
     console.log("anArr wrotemedia",anArr);
 }
@@ -921,6 +935,7 @@ async function writeTbody(mDB, wich, anArr, scrTabl)
 						}
 						td.textContent = item[key];
 						td.classList.add('cellTit');
+						td.classList.add('font_normal_white');						
 						tr.appendChild(td);
 						break;
 					case "text":
