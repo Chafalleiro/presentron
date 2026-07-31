@@ -241,9 +241,11 @@ async function startProyector(ndx) {
                         slIndexes.push(item["keySl"]);
                     }
                     console.log("slIndexes", slIndexes);
-                    val.path = actFile.name;
+					if(ndx > 0){
+						val.path = actFile.name;
+					    let request = db.put("files", val); //Update the file name
+						}
                     img_count = slIndexes.length;
-                    let request = db.put("files", val); //Update the file name
 
                     // Load all slide images before showing the projector
                     loadSlideImages(anArr, function () {
