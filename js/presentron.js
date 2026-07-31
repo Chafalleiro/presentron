@@ -307,7 +307,6 @@ function reposition() {
 
     imgAct.onload = function () {
         imgAct.src = imgSrc;
-
         sldAct.style.backgroundImage = "url('" + imgSrc + "')"; //Load slide image
         sldAct.style.visibility = "visible";
 
