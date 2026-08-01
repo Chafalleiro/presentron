@@ -42,10 +42,11 @@
 			<ul id="contolbtn" class="menubar">
 				<!-- Menu visibility  -->
 				<li class="bgbright" style="display: block; z-index:10;" id="showmenu">
-				<a href="#" id ="expand"
+				<a class="cellTit" cellTithref="#" id ="expand"
 				   onclick="document.getElementById('ulist').style.display  = 'block';
 							document.getElementById('expand').style.display  = 'none';
-							document.getElementById('shrink').style.display  = 'block';">🗗</a>
+							document.getElementById('shrink').style.display  = 'block';">🗗
+							<span class="tooltiptextDown">Expand Menu.</span></a>
 				</li>
 				<li class="bgbright">
 					<a href="#" id ="shrink" 
@@ -72,16 +73,15 @@
 			<ul id="ulist" style="display:none;">
 				<!-- HOME  -->
 				<li>
-					
-					<a href="FrindesFavs-Rollercoin.html">&nbsp;&nbsp;&nbsp;&nbsp;Home</a>
+					<a href="https://github.com/Chafalleiro/presentron">&nbsp;&nbsp;&nbsp;&nbsp;Repo</a>
 				</li>
 		<!-- TOC  -->
 				<li class="dropdown">
 					<a href="index.html" class="dropbtn">Index</a>
 				<div class="dropdown-content">
-					<a href="list.html" >List of earning sites.</a>
-					<a href="home.html" >Splash page</a>
-				<!--<a href="toc.html" class="ltrough">Guidex Index.</a>   -->
+					<a href="s_presentron.html" >Editable carts and slides.</a>
+					<a href="presentron.html" >Editable carts.</a>
+					<!-- <a href="h_presentron.html" >Hardcoded presentation.</a>  -->
 				</div>
 				</li>
 				<!-- MISC  -->
@@ -90,8 +90,6 @@
 					<div class="dropdown-content">
 						<a href="https://chafalleiro.github.io/retromator/">VIDEOMATOR (pre alfa)</a>
 						<a href="https://chafalleiro.github.io/retromator/slideshare.html">SLIDERTRON</a>
-						<a href="s_presentron.html">>PRESENTRON SETUP</a>
-						<a href="presentron.html">PRESENTRON</a>
 					</div>
 				</li>
 				<!-- NAVIGATION  -->
@@ -133,6 +131,8 @@
 			<span id="flashTxt"></span>
 		</div>
 		</div>
+		<span id="slHelp" class="textbutton" onclick="startProyector('quick_slides.json');">[Slides help]</span>
+		<span id="cfHelp" class="textbutton" onclick="startProyector('slides_data.json');">[Configuration help]</span>
 	<!-- TITLE  -->
 	<!-- CONTENT  -->
 
@@ -293,6 +293,29 @@
 				<td class="tdWindow"><br>
 					<h1>HELP</h1>
 					<br>
+Main Menu: Click the 🗗 button to expand the menu.<br>
+Repo - Repository with the sources of this page.<br>
+Index - Main page.<br>
+--Editable Carts and Slides. Here you can Import, export and edit oth carts (slides containers), and Slides.(Slidertron Manage)<br><br>
+--Editable Carts. Here you can Import, export and edit oth carts (slides containers).<br><br>
+<!-- --Hardoced presentation. Example of a presentation with the files stored in server space and harcoded paths.<br>  -->
+Demos - Other Retromator works.<br><br>
+-- Videomator. A work in progress (even less progress than work) to show videos in  CRT mode.<br><br>
+-- Slidertron. Juast harcoded slides, the seed of this project, slightlly different methods of display and load the images.<br><br>
+Data - Database management.<br><br>
+-- Data Files. Manage the slidecart list files. Export or import them.<br><br>
+Help - This help, about the app and credits.<br><br>
+Controls - Manage the screen configurations. Theay are saved in the IDB after clicking OK, cancel ignores the changes.<br><br>
+-- Color Controls. Select one screen color, from VGA or monochrome phsphor colors (Blue, Green, Red, Yellow and Gray(B/N)).<br><br>
+-- Also you can set the brightness and contrast.<br><br>
+-- CRT controls. Control the screen effects.<br><br>
+--- Activate the barrel.<br><br>
+--- Activate shadow text to flicker scree, GPU intensive, set as disabled by default.<br><br>
+--- Scanline. Set the speed of the scanline.<br><br>
+--- x, y, w, h Lens H and Lens V control the aspect of the barrel, skew, displacement ans lens size.<br><br>
+--- Aspect Ratio. Informs about the current window aspect ratio.<br><br>
+-- Save configuration. Save the current configuration into a json local file.<br><br>
+-- Load configuration. Load configuration params from a json local file.<br><br>					
 				</td>
 			</tr>
 			<tr>
@@ -418,7 +441,12 @@
 <div id="crtControls" class="windows tdWindow">
 	<p onclick="showModal('crtControls')"  class="icon_right">❎</p>
 		CRT BARREL ACTIVE <input id="brrlChck" type="checkbox" onchange="barrelCheck('content', this);"><br>
-		<label for="slider-x">Scale</label>:
+		TEXT SHADOW ACTIVE <input id="txtSdhwChk" type="checkbox" onchange="txtShadow('content', this);"><br>
+
+		<label for="slider-x">Scanline</label>:
+	<!-- moveSlider(this, 'scale') -->
+		<input class="slider" id="slider-scan" type="range" min="0.1" max="30" value="10" step="0.1" oninput="scanSpeed(this, 'speed');this.nextElementSibling.value = this.value" onmouseover="this.nextElementSibling.value = this.value"><output>10</output>
+		<br>
 	<!-- moveSlider(this, 'scale')  -->
 		<input class="slider" id="slider-x" type="range" min="0" max="5000" value="55" step="5" oninput="moveSlider(this, 'scale');this.nextElementSibling.value = this.value" onmouseover="this.nextElementSibling.value = this.value"><output>55</output>
 		<br>

@@ -209,16 +209,9 @@ async function startProyector(ndx) {
     await db.clear("slides");
 	//Load slides from special help files. Make cases for each one
 	var mesg;
-	if (ndx < 0)
+	if (isNaN(ndx))
 	{
-		switch (ndx) {
-			case -1:
-				var mesg = await slideLoads("quick_slides.json", "slides");
-				break;
-			case -2:
-				var mesg = await slideLoads("config_help.json", "slides");
-				break;
-		}
+		var mesg = await slideLoads(ndx, "slides");
 	}
     //Load slides File from files
 	else {mesg = await slideLoads(val.path, "slides");}
@@ -241,7 +234,7 @@ async function startProyector(ndx) {
                         slIndexes.push(item["keySl"]);
                     }
                     console.log("slIndexes", slIndexes);
-					if(ndx > 0){
+					if(Number.isInteger(ndx) && ndx > 0){
 						val.path = actFile.name;
 					    let request = db.put("files", val); //Update the file name
 						}
